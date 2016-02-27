@@ -5,7 +5,7 @@
     /// <summary>
     /// Represents time of some action of employer.
     /// </summary>
-    class EmployerTimeStamp
+    public class EmployerTimeStamp
     {
         /// <summary>
         /// Gets/sets unique identifier of employer.

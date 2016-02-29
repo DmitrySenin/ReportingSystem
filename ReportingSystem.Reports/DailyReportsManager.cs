@@ -49,6 +49,11 @@
                 return protocol;
             }
 
+            if (employerStamps.Count == 0)
+            {
+                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+            }
+
             TimeSpan result = new TimeSpan(0);
 
             for (int i = 0; i < employerStamps.Count - 1; i += 2)

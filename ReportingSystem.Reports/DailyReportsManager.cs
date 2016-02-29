@@ -42,6 +42,23 @@
 
             List<EmployerTimeStamp> employerStamps = this.collectStapmsForDailyReport<TimeSpan>(employerID, day, protocol);
 
+            // There is errors that can't be repaired.
+            if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
+            {
+                protocol.IsSucceed = false;
+                return protocol;
+            }
+
+            TimeSpan result = new TimeSpan(0);
+
+            for (int i = 0; i < employerStamps.Count - 1; i += 2)
+            {
+                result += employerStamps[i + 1].Time - employerStamps[i].Time;
+            }
+
+            protocol.Result = result;
+            protocol.IsSucceed = true;
+
             return protocol;
         }
 

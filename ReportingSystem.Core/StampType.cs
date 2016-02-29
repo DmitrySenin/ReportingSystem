@@ -8,11 +8,11 @@
         /// <summary>
         /// Employer come in office.
         /// </summary>
-        In,
+        In = 0,
 
         /// <summary>
         /// Employer come out office.
         /// </summary>
-        Out
+        Out = 1
     }
 }

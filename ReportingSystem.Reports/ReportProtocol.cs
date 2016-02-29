@@ -25,6 +25,15 @@
         public List<Notification> Notifications { get; set; }
 
         /// <summary>
+        /// Create instance of <see cref="ReportProtocol{T}"/> class.
+        /// </summary>
+        public ReportProtocol()
+        {
+            this.Result = default(T);
+            this.Notifications = new List<Notification>();
+        }
+
+        /// <summary>
         /// Collect notification by type.
         /// </summary>
         /// <param name="type">Target type of notification.</param>

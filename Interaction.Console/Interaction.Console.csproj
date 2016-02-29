@@ -49,6 +49,20 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataSource.StampsCollection\DataSource.StampsCollection.csproj">
+      <Project>{46cc6b50-27f7-4c37-b79d-8c83968ae0fa}</Project>
+      <Name>DataSource.StampsCollection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReportingSystem.Core\ReportingSystem.Core.csproj">
+      <Project>{826551e0-63ad-4cd5-9eff-d665d5465e29}</Project>
+      <Name>ReportingSystem.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReportingSystem.Reports\ReportingSystem.Reports.csproj">
+      <Project>{c36bdc5c-ddf0-4999-b348-3962222115d6}</Project>
+      <Name>ReportingSystem.Reports</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

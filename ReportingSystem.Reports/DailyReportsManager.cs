@@ -65,6 +65,7 @@
 
             this.verifyFirstStamp<T>(employerStamps, employerID, day, protocol);
             this.verifyLastStamp<T>(employerStamps, employerID, day, protocol);
+            this.verifyStampsSequence<T>(employerStamps, employerID, day, protocol);
 
             return employerStamps;
         }
@@ -136,6 +137,56 @@
 
                     // End of target day.
                     lastOutStamp.Time = new DateTime(day.Year, day.Month, day.Day, 23, 59, 59);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check out sequence of stamps in collection
+        /// that each In-stamp is followed by Out-stamp.
+        /// </summary>
+        /// <typeparam name="T">Type of result of protocol.</typeparam>
+        /// <param name="employerStamps">Collection that should be checked.</param>
+        /// <param name="employerID">Unique identifier of target employer.</param>
+        /// <param name="day">Date of day of reporting.</param>
+        /// <param name="protocol">Protocol of reporting.</param>
+        private void verifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        {
+            for (int i = 0; i < employerStamps.Count; )
+            {
+                if (employerStamps[i].Type == employerStamps[i + 1].Type)
+                {
+                    if (employerStamps[i].Time == employerStamps[i + 1].Time)
+                    {
+                        protocol.Notifications.Add(new Notification("Equal stamps was found. One of them was removed.", NotificationType.Warning));
+                        employerStamps.RemoveAt(i + 1);
+
+                        // Indexer should not be changed because 
+                        // new (i + 1) element can be same type and time again.
+                    }
+                    else
+                    {
+                        protocol.Notifications.Add(new Notification("Found two followed stamps of one type. Add new between them at the middle.", NotificationType.Warning));
+
+                        // Compute difference in milliseconds.
+                        int diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).Milliseconds;
+
+                        EmployerTimeStamp middleStamp = new EmployerTimeStamp();
+                        middleStamp.EmployerID = employerID;
+                        middleStamp.Type = employerStamps[i].Type == StampType.In ? StampType.Out : StampType.In;
+
+                        // Add half of difference to earlier date.
+                        middleStamp.Time = employerStamps[i].Time + TimeSpan.FromMilliseconds(diffInMilliseconds / 2);
+
+                        employerStamps.Insert(i + 1, middleStamp);
+
+                        // Go to element that was (i + 1) before insert.
+                        i += 2;
+                    }
+                }
+                else
+                {
+                    i++;
                 }
             }
         }

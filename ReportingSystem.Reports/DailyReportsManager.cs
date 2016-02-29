@@ -204,6 +204,8 @@
 
                     // End of target day.
                     lastOutStamp.Time = new DateTime(day.Year, day.Month, day.Day, 23, 59, 59);
+
+                    employerStamps.Add(lastOutStamp);
                 }
             }
         }

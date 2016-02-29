@@ -68,6 +68,51 @@
         }
 
         /// <summary>
+        /// Find all respites of employer for day.
+        /// </summary>
+        /// <param name="employerID">Unique identifier of employer.</param>
+        /// <param name="day">Target day.</param>
+        /// <param name="maxDuration">Maximum duration of respite.</param>
+        /// <returns>Collection of all respites.</returns>
+        public ReportProtocol<List<Respite>> RespitesForDay(int employerID, DateTime day, TimeSpan maxDuration)
+        {
+            ReportProtocol<List<Respite>> protocol = new ReportProtocol<List<Respite>>();
+
+            List<EmployerTimeStamp> employerStamps = this.collectStapmsForDailyReport<List<Respite>>(employerID, day, protocol);
+
+            // There is errors that can't be repaired.
+            if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
+            {
+                protocol.IsSucceed = false;
+                return protocol;
+            }
+
+            if (employerStamps.Count == 0)
+            {
+                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+            }
+
+            List<Respite> result = new List<Respite>();
+
+            // Start with i equals 1 because we interested of when
+            // employer Out and when In but first stamp is In.
+            for (int i = 1; i < employerStamps.Count - 1; i += 2)
+            {
+                var duration = employerStamps[i + 1].Time - employerStamps[i].Time;
+
+                if (duration <= maxDuration)
+                {
+                    result.Add(new Respite(employerStamps[i].Time, employerStamps[i + 1].Time));
+                }
+            }
+
+            protocol.Result = result;
+            protocol.IsSucceed = true;
+
+            return protocol;
+        }
+
+        /// <summary>
         /// Gathers all data for daily report, check it and complete if necessary.
         /// Add important notification to protocol.
         /// </summary>

@@ -160,6 +160,8 @@
 
                 // set beginning of target day.
                 firstInStamp.Time = new DateTime(day.Year, day.Month, day.Day, 0, 0, 0);
+
+                employerStamps.Insert(0, firstInStamp);
             }
         }
 

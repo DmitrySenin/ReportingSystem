@@ -64,6 +64,7 @@
             }
 
             this.verifyFirstStamp<T>(employerStamps, employerID, day, protocol);
+            this.verifyLastStamp<T>(employerStamps, employerID, day, protocol);
 
             return employerStamps;
         }
@@ -92,6 +93,62 @@
                 // set beginning of target day.
                 firstInStamp.Time = new DateTime(day.Year, day.Month, day.Day, 0, 0, 0);
             }
+        }
+
+        /// <summary>
+        /// Check out last element of collection of stamps 
+        /// to add if require non existent last out-stamp.
+        /// </summary>
+        /// <typeparam name="T">Type of result of protocol.</typeparam>
+        /// <param name="employerStamps">Collection that should be checked.</param>
+        /// <param name="employerID">Unique identifier of target employer.</param>
+        /// <param name="day">Date of day of reporting.</param>
+        /// <param name="protocol">Protocol of reporting.</param>
+        private void verifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        {
+            // if last record is not out-stamp.
+            if (employerStamps[employerStamps.Count - 1].Type != StampType.Out)
+            {
+                protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
+
+                // Date of next day.
+                DateTime nextDay = new DateTime(day.Year, day.Month, day.Day + 1, 0, 0, 0);
+
+                // Find records for next day.
+                List<EmployerTimeStamp> employerStampsForNextDay = this.employerStampsSource.GetByEmployerIDForDay(employerID, nextDay);
+                DateTime nextDayFindingDate = this.nextDayEarliestFindingTime(day);
+
+                // First stamp of next day is Out-stamp and satisfies restriction time.
+                if (employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
+                {
+                    protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
+
+                    employerStamps.Add(employerStampsForNextDay[0]);
+                }
+                else
+                {
+                    protocol.Notifications.Add(new Notification("End of target day was added as last Out-stamp.", NotificationType.Message));
+
+                    // Added stamp.
+                    EmployerTimeStamp lastOutStamp = new EmployerTimeStamp();
+                    lastOutStamp.EmployerID = employerID;
+                    lastOutStamp.Type = StampType.Out;
+
+                    // End of target day.
+                    lastOutStamp.Time = new DateTime(day.Year, day.Month, day.Day, 23, 59, 59);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Build time of employer stamps to find records in next day.
+        /// </summary>
+        /// <param name="currentDay">Date of "current" day.</param>
+        /// <returns>Time to restrict finding of data.</returns>
+        private DateTime nextDayEarliestFindingTime(DateTime currentDay)
+        {
+            // 4 am of next day.
+            return new DateTime(currentDay.Year, currentDay.Month, currentDay.Day, 4, 0, 0);
         }
     }
 }

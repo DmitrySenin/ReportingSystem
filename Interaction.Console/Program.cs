@@ -17,13 +17,35 @@
             ReportProtocol<TimeSpan> dayWork = dailyReporter.TimeOfWorkForDay(targetEmployer(), tagetDay());
             ReportProtocol<List<Respite>> dayRespites = dailyReporter.RespitesForDay(targetEmployer(), tagetDay(), maxRespiteDuration());
 
-            Console.WriteLine("Time of work for day: {0} hrs.", dayWork.Result.TotalHours);
-            Console.WriteLine("Amount of respites: {0}", dayRespites.Result.Count);
-            Console.WriteLine("Amount of notifications: {0}", dayRespites.Notifications.Count);
+            Console.WriteLine("Time for day:");
+            if (dayWork.IsSucceed)
+            {
+                Console.WriteLine("\t{0} hrs.", dayWork.Result.TotalHours);
+                Console.WriteLine("\tNotifications count: {0}", dayWork.Notifications.Count);
+            }
+            else
+            {
+                Console.WriteLine("\tError was occurred. Reporting end unsuccessfully.");
+            }
+            foreach (var n in dayWork.Notifications)
+            {
+                Console.WriteLine("\tType: {0}. Message: {1}", n.Type, n.Description);
+            }
 
+
+            Console.WriteLine("Respites for day:");
+            if (dayRespites.IsSucceed)
+            {
+                Console.WriteLine("\tAmount of respites: {0}", dayRespites.Result.Count);
+                Console.WriteLine("\tNotifications count: {0}", dayRespites.Notifications.Count);
+            }
+            else
+            {
+                Console.WriteLine("\tError was occurred. Reporting end unsuccessfully.");
+            }
             foreach (var n in dayRespites.Notifications)
             {
-                Console.WriteLine("Type: {0}. Message: {1}", n.Type, n.Description);
+                Console.WriteLine("\tType: {0}. Message: {1}", n.Type, n.Description);
             }
 
             Console.ReadKey();
@@ -36,7 +58,7 @@
 
         private static int targetEmployer()
         {
-            return 2;
+            return 1;
         }
 
         private static DateTime tagetDay()

@@ -180,7 +180,7 @@
                 protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
 
                 // Date of next day.
-                DateTime nextDay = new DateTime(day.Year, day.Month, day.Day + 1, 0, 0, 0);
+                DateTime nextDay = day.AddDays(1);
 
                 // Find records for next day.
                 List<EmployerTimeStamp> employerStampsForNextDay = this.employerStampsSource.GetByEmployerIDForDay(employerID, nextDay);
@@ -236,7 +236,7 @@
                         protocol.Notifications.Add(new Notification("Found two followed stamps of one type. Add new between them at the middle.", NotificationType.Warning));
 
                         // Compute difference in milliseconds.
-                        int diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).Milliseconds;
+                        double diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).TotalMilliseconds;
 
                         EmployerTimeStamp middleStamp = new EmployerTimeStamp();
                         middleStamp.EmployerID = employerID;

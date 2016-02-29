@@ -187,7 +187,7 @@
                 DateTime nextDayFindingDate = this.nextDayEarliestFindingTime(day);
 
                 // First stamp of next day is Out-stamp and satisfies restriction time.
-                if (employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
+                if (employerStampsForNextDay.Count > 0 && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
                     protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
 
@@ -219,7 +219,7 @@
         /// <param name="protocol">Protocol of reporting.</param>
         private void verifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
-            for (int i = 0; i < employerStamps.Count; )
+            for (int i = 0; i < employerStamps.Count - 1; )
             {
                 if (employerStamps[i].Type == employerStamps[i + 1].Type)
                 {

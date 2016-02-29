@@ -5,6 +5,7 @@
 
     /// <summary>
     /// Frame to implement source of stamps of employers actions.
+    /// Guarantees that all data will be sorted by date, time and type of stamp.
     /// </summary>
     public interface IEmployerStampsSource
     {

@@ -19,5 +19,10 @@
         /// Describing message when reference to stamps collections is null.
         /// </summary>
         public static readonly string StampsCollectionReferenceIsNull = "Collection of stamps can't be null reference.";
+
+        /// <summary>
+        /// Describing message when for employer system can't find any stamps for day.
+        /// </summary>
+        public static readonly string EmployerStampsNotFound = "Could not found stamps of employer for requested day.";
     }
 }

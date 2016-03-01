@@ -51,7 +51,7 @@
 
             if (employerStamps.Count == 0)
             {
-                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.EmployerStampsNotFound, NotificationType.Message));
             }
 
             TimeSpan result = new TimeSpan(0);
@@ -89,7 +89,7 @@
 
             if (employerStamps.Count == 0)
             {
-                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.EmployerStampsNotFound, NotificationType.Message));
             }
 
             List<Respite> result = new List<Respite>();

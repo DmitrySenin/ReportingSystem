@@ -522,7 +522,7 @@
         {
             Mock<IEmployerStampsSource> mockStampsSource = new Mock<IEmployerStampsSource>();
 
-            if (stamps != null)
+            if (stamps != null && stamps.Count != 0)
             {
                 mockStampsSource.Setup(m => m.GetAll()).Returns(stamps);
 
@@ -550,6 +550,12 @@
                 {
                     mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.Is<int>(id => id == empDayStamps.EmployerID), It.Is<DateTime>(day => day == empDayStamps.Day))).Returns(empDayStamps.Stamps);
                 }
+            }
+            else
+            {
+                mockStampsSource.Setup(m => m.GetAll()).Returns(new List<EmployerTimeStamp>());
+                mockStampsSource.Setup(m => m.GetByEmployerID(It.IsAny<int>())).Returns(new List<EmployerTimeStamp>());
+                mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.IsAny<int>(), It.IsAny<DateTime>())).Returns(new List<EmployerTimeStamp>());
             }
 
             return mockStampsSource.Object;

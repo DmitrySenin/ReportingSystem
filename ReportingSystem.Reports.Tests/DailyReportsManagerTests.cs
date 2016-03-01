@@ -195,6 +195,9 @@
             // expected added stamp has Out type and end of target day as time.
             var expectedStamp = stamps[stamps.Count - 1];
 
+            // Remove last record to pass to method.
+            stamps.RemoveAt(stamps.Count - 1);
+
             // Act
             dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
 
@@ -226,6 +229,9 @@
 
             // expected added stamp has Out type and end of target day as time.
             var expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(23).AddMinutes(59).AddSeconds(59) };
+
+            // Remove last record to pass to method.
+            stamps.RemoveAt(stamps.Count - 1);
 
             // Act
             dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);

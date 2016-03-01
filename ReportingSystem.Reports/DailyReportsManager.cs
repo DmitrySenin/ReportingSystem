@@ -24,7 +24,7 @@
         {
             if (employerStampsSource == null)
             {
-                throw new ArgumentNullException("Reference to source of data can't be null.");
+                throw new ArgumentNullException(ReporterMessages.StampsSourceReferenceIsNull);
             }
 
             this.employerStampsSource = employerStampsSource;
@@ -125,7 +125,7 @@
         {
             if(protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference."); 
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull); 
             }
 
             List<EmployerTimeStamp> employerStamps = this.employerStampsSource.GetByEmployerIDForDay(employerID, day);
@@ -155,12 +155,12 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             // if first record is not in-stamp.
@@ -193,12 +193,12 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             // if last record is not out-stamp.
@@ -251,12 +251,12 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             for (int i = 0; i < employerStamps.Count - 1; )

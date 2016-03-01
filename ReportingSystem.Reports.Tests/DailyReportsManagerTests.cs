@@ -311,6 +311,24 @@
             Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
+        /// <summary>
+        /// Checks that system throw exceptions if reference to protocol is null.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_ProtocolReferenceIsNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = null;
+
+            // Act and Assert
+            // Check that call method with null protocol throws "ArgumentNullException".
+            Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
         #endregion
 
         #region VerifyStampsSequence Tests

@@ -419,6 +419,42 @@
             Assert.That(stamps, Is.EqualTo(expectedStamps));
         }
 
+        /// <summary>
+        /// Checks that system throw exceptions if reference to source is null.
+        /// </summary>
+        [TestCase]
+        public void VerifyStampsSequence_CollectionOfStampsIsNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = null;
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+
+            // Act and Assert
+            // Check that call method with null collection throws "ArgumentNullException".
+            Assert.That(() => dailyReporter.verifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
+        /// <summary>
+        /// Checks that system throw exceptions if reference to protocol is null.
+        /// </summary>
+        [TestCase]
+        public void VerifyStampsSequence_ProtocolReferenceIsNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = null;
+
+            // Act and Assert
+            // Check that call method with null protocol throws "ArgumentNullException".
+            Assert.That(() => dailyReporter.verifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
         #endregion
 
         /// <summary>

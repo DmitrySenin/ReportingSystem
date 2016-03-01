@@ -641,6 +641,33 @@
             Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
         }
 
+        /// <summary>
+        /// Test that if there is no stamps for day then system should not find any respites.
+        /// </summary>
+        [TestCase]
+        public void RespitesForDay_NoStampsForDay_NoRespitesFound()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            TimeSpan maxRespiteDuration = new TimeSpan(0, 15, 0);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // No excpected respites.
+            List<Respite> expectedRespites = new List<Respite>();
+
+            // Act
+            var protocol = dailyReporter.RespitesForDay(targetEmployerID, targetDay, maxRespiteDuration);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
+        }
+
         #endregion
 
         /// <summary>

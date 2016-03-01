@@ -268,7 +268,8 @@
         private DateTime nextDayEarliestFindingTime(DateTime currentDay)
         {
             // 4 am of next day.
-            return new DateTime(currentDay.Year, currentDay.Month, currentDay.Day, 4, 0, 0);
+            DateTime nextDayTime = currentDay.AddDays(1);
+            return new DateTime(nextDayTime.Year, nextDayTime.Month, nextDayTime.Day, 4, 0, 0);
         }
     }
 }

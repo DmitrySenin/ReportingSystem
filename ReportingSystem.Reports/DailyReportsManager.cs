@@ -160,6 +160,8 @@
 
                 // set beginning of target day.
                 firstInStamp.Time = new DateTime(day.Year, day.Month, day.Day, 0, 0, 0);
+
+                employerStamps.Insert(0, firstInStamp);
             }
         }
 
@@ -180,14 +182,14 @@
                 protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
 
                 // Date of next day.
-                DateTime nextDay = new DateTime(day.Year, day.Month, day.Day + 1, 0, 0, 0);
+                DateTime nextDay = day.AddDays(1);
 
                 // Find records for next day.
                 List<EmployerTimeStamp> employerStampsForNextDay = this.employerStampsSource.GetByEmployerIDForDay(employerID, nextDay);
                 DateTime nextDayFindingDate = this.nextDayEarliestFindingTime(day);
 
                 // First stamp of next day is Out-stamp and satisfies restriction time.
-                if (employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
+                if (employerStampsForNextDay.Count > 0 && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
                     protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
 
@@ -204,6 +206,8 @@
 
                     // End of target day.
                     lastOutStamp.Time = new DateTime(day.Year, day.Month, day.Day, 23, 59, 59);
+
+                    employerStamps.Add(lastOutStamp);
                 }
             }
         }
@@ -219,7 +223,7 @@
         /// <param name="protocol">Protocol of reporting.</param>
         private void verifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
-            for (int i = 0; i < employerStamps.Count; )
+            for (int i = 0; i < employerStamps.Count - 1; )
             {
                 if (employerStamps[i].Type == employerStamps[i + 1].Type)
                 {
@@ -236,7 +240,7 @@
                         protocol.Notifications.Add(new Notification("Found two followed stamps of one type. Add new between them at the middle.", NotificationType.Warning));
 
                         // Compute difference in milliseconds.
-                        int diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).Milliseconds;
+                        double diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).TotalMilliseconds;
 
                         EmployerTimeStamp middleStamp = new EmployerTimeStamp();
                         middleStamp.EmployerID = employerID;
@@ -266,7 +270,8 @@
         private DateTime nextDayEarliestFindingTime(DateTime currentDay)
         {
             // 4 am of next day.
-            return new DateTime(currentDay.Year, currentDay.Month, currentDay.Day, 4, 0, 0);
+            DateTime nextDayTime = currentDay.AddDays(1);
+            return new DateTime(nextDayTime.Year, nextDayTime.Month, nextDayTime.Day, 4, 0, 0);
         }
     }
 }

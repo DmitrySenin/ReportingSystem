@@ -265,7 +265,7 @@
                 {
                     if (employerStamps[i].Time == employerStamps[i + 1].Time)
                     {
-                        protocol.Notifications.Add(new Notification("Equal stamps was found. One of them was removed.", NotificationType.Warning));
+                        protocol.Notifications.Add(new Notification(ReporterMessages.OneOfEqualStampsRemoved, NotificationType.Warning));
                         employerStamps.RemoveAt(i + 1);
 
                         // Indexer should not be changed because 
@@ -273,7 +273,7 @@
                     }
                     else
                     {
-                        protocol.Notifications.Add(new Notification("Found two followed stamps of one type. Add new between them at the middle.", NotificationType.Warning));
+                        protocol.Notifications.Add(new Notification(ReporterMessages.NewStampInMiddleBetweenSameType, NotificationType.Warning));
 
                         // Compute difference in milliseconds.
                         double diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).TotalMilliseconds;

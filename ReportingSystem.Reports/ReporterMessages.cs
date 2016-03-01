@@ -47,8 +47,18 @@
         public static readonly string FirstOutNextDayAsLast = "First Out-stamp of next day was added as last Out-stamp.";
 
         /// <summary>
-        /// Describing messages when end of target day was added as last Out-stamp.
+        /// Describing message when end of target day was added as last Out-stamp.
         /// </summary>
         public static readonly string EndDayAsLastOutStamp = "End of target day was added as last Out-stamp.";
+
+        /// <summary>
+        /// Describing message when two equal stamps was found and one of them was removed.
+        /// </summary>
+        public static readonly string OneOfEqualStampsRemoved = "Equal stamps was found. One of them was removed.";
+
+        /// <summary>
+        /// Describing message when new stamp was added between two of same type.
+        /// </summary>
+        public static readonly string NewStampInMiddleBetweenSameType = "Found two followed stamps of one type. Add new between them at the middle.";
     }
 }

@@ -204,7 +204,7 @@
             // if last record is not out-stamp.
             if (employerStamps.Count == 0 || employerStamps[employerStamps.Count - 1].Type != StampType.Out)
             {
-                protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
+                protocol.Notifications.Add(new Notification(ReporterMessages.LastOutStampNotFound, NotificationType.Warning));
 
                 // Date of next day.
                 DateTime nextDay = day.AddDays(1);
@@ -217,13 +217,13 @@
                 if (employerStampsForNextDay != null && employerStampsForNextDay.Count > 0
                     && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
-                    protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
+                    protocol.Notifications.Add(new Notification(ReporterMessages.FirstOutNextDayAsLast, NotificationType.Message));
 
                     employerStamps.Add(employerStampsForNextDay[0]);
                 }
                 else
                 {
-                    protocol.Notifications.Add(new Notification("End of target day was added as last Out-stamp.", NotificationType.Message));
+                    protocol.Notifications.Add(new Notification(ReporterMessages.EndDayAsLastOutStamp, NotificationType.Message));
 
                     // Added stamp.
                     EmployerTimeStamp lastOutStamp = new EmployerTimeStamp();

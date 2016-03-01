@@ -34,5 +34,21 @@
         /// Describing message when beginning of target day was added as first In-stamp.
         /// </summary>
         public static readonly string BeginDayAsInStampAdded = "Begin of target day was added as first In-stamp.";
+
+        /// <summary>
+        /// Describing message of situation when system can't find last out-stamp for day and employer.
+        /// </summary>
+        public static readonly string LastOutStampNotFound = "Last out-stamp was not found.";
+
+        /// <summary>
+        /// Describing message of situation when first found Out-stamp of next day 
+        /// was added as last out-stamp.
+        /// </summary>
+        public static readonly string FirstOutNextDayAsLast = "First Out-stamp of next day was added as last Out-stamp.";
+
+        /// <summary>
+        /// Describing messages when end of target day was added as last Out-stamp.
+        /// </summary>
+        public static readonly string EndDayAsLastOutStamp = "End of target day was added as last Out-stamp.";
     }
 }

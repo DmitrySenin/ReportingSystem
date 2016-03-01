@@ -512,6 +512,32 @@
             Assert.That(protocol.Result, Is.EqualTo(expectedTime));
         }
 
+        /// <summary>
+        /// Test method of computation total time of work if data for day does not exist.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_NoDataForDay_TimeOfWorkEqualsZero()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 0 hours 0 minutes and 0 seconds.
+            TimeSpan expectedTime = new TimeSpan(0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
+
         #endregion
 
         /// <summary>

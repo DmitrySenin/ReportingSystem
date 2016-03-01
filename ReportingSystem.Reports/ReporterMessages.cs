@@ -24,5 +24,15 @@
         /// Describing message when for employer system can't find any stamps for day.
         /// </summary>
         public static readonly string EmployerStampsNotFound = "Could not found stamps of employer for requested day.";
+
+        /// <summary>
+        /// Describing message when first in-stamp was not found.
+        /// </summary>
+        public static readonly string FirstInStampNotFound = "First In-stamp was not found.";
+
+        /// <summary>
+        /// Describing message when beginning of target day was added as first In-stamp.
+        /// </summary>
+        public static readonly string BeginDayAsInStampAdded = "Begin of target day was added as first In-stamp.";
     }
 }

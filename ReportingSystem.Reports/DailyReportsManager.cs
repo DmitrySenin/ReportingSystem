@@ -166,8 +166,8 @@
             // if first record is not in-stamp.
             if (employerStamps.Count == 0 || employerStamps[0].Type != StampType.In)
             {
-                protocol.Notifications.Add(new Notification("First In-stamp was not found.", NotificationType.Warning));
-                protocol.Notifications.Add(new Notification("Begin of target day was added as first In-stamp.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.FirstInStampNotFound, NotificationType.Warning));
+                protocol.Notifications.Add(new Notification(ReporterMessages.BeginDayAsInStampAdded, NotificationType.Message));
 
                 EmployerTimeStamp firstInStamp = new EmployerTimeStamp();
                 firstInStamp.EmployerID = employerID;

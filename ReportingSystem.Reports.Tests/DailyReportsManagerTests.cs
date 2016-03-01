@@ -99,9 +99,27 @@
             Assert.That(stamps, Is.EqualTo(expectedStamps));
         }
 
+        /// <summary>
+        /// Checks that system throw exceptions if reference to source is null.
+        /// </summary>
+        [TestCase]
+        public void VerifyFirstStamp_CollectionOfStampsIsNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = null;
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+
+            // Act and Assert
+            // Check that call method with empty collection not throwing any exceptions.
+            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
         #endregion
 
-        #region VerifyFirstStamp Tests
+        #region VerifyLastStamp Tests
 
         /// <summary>
         /// Verifying method should add end of target day as last Out-stamp.
@@ -351,31 +369,34 @@
         {
             Mock<IEmployerStampsSource> mockStampsSource = new Mock<IEmployerStampsSource>();
 
-            mockStampsSource.Setup(m => m.GetAll()).Returns(stamps);
-
-            // Grouped all stamps by employer ID and locate it all to one record.
-            var stampsGroupsForEmployer = from stamp in stamps
-                                          orderby stamp.Time, stamp.Type
-                                          group stamp by stamp.EmployerID into empGroup
-                                          select new { EmployerID = empGroup.Key, Stamps = empGroup.Select(s => s).ToList() };
-            
-            // Setup mock's GetByEmployerID method.
-            foreach(var empStamps in stampsGroupsForEmployer)
+            if (stamps != null)
             {
-                mockStampsSource.Setup(m => m.GetByEmployerID(It.Is<int>(id => id == empStamps.EmployerID))).Returns(empStamps.Stamps);
-            }
+                mockStampsSource.Setup(m => m.GetAll()).Returns(stamps);
 
-            // Grouped all stamps by employer and day and locate it all to one record.
-            var stampsGroupsForEmployerAndDay = from empGroup in stampsGroupsForEmployer
-                                                from dayGroup in
-                                                       (from dayGroup in empGroup.Stamps
-                                                        group dayGroup by dayGroup.Time.Date)
-                                                select new { EmployerID = empGroup.EmployerID, Day = dayGroup.Key, Stamps = dayGroup.Select(s => s).ToList() };
+                // Grouped all stamps by employer ID and locate it all to one record.
+                var stampsGroupsForEmployer = from stamp in stamps
+                                              orderby stamp.Time, stamp.Type
+                                              group stamp by stamp.EmployerID into empGroup
+                                              select new { EmployerID = empGroup.Key, Stamps = empGroup.Select(s => s).ToList() };
 
-            // Setup mock's GetByEmployerIDForDay method.
-            foreach (var empDayStamps in stampsGroupsForEmployerAndDay)
-            {
-                mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.Is<int>(id => id == empDayStamps.EmployerID), It.Is<DateTime>(day => day == empDayStamps.Day))).Returns(empDayStamps.Stamps);
+                // Setup mock's GetByEmployerID method.
+                foreach (var empStamps in stampsGroupsForEmployer)
+                {
+                    mockStampsSource.Setup(m => m.GetByEmployerID(It.Is<int>(id => id == empStamps.EmployerID))).Returns(empStamps.Stamps);
+                }
+
+                // Grouped all stamps by employer and day and locate it all to one record.
+                var stampsGroupsForEmployerAndDay = from empGroup in stampsGroupsForEmployer
+                                                    from dayGroup in
+                                                           (from dayGroup in empGroup.Stamps
+                                                            group dayGroup by dayGroup.Time.Date)
+                                                    select new { EmployerID = empGroup.EmployerID, Day = dayGroup.Key, Stamps = dayGroup.Select(s => s).ToList() };
+
+                // Setup mock's GetByEmployerIDForDay method.
+                foreach (var empDayStamps in stampsGroupsForEmployerAndDay)
+                {
+                    mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.Is<int>(id => id == empDayStamps.EmployerID), It.Is<DateTime>(day => day == empDayStamps.Day))).Returns(empDayStamps.Stamps);
+                }
             }
 
             return mockStampsSource.Object;

@@ -457,6 +457,20 @@
 
         #endregion
 
+        #region DailyReportsManager Tests
+
+        /// <summary>
+        /// Checks that constructor of daily reporter throw exception 
+        /// if passed reference to source is null.
+        /// </summary>
+        [TestCase]
+        public void DailyReportsManager_StampsSourceIsNull_ThrowArgumentNullException()
+        {
+            Assert.That(() => new DailyReportsManager(null), Throws.Exception.TypeOf<ArgumentNullException>());
+        }    
+
+        #endregion
+
         /// <summary>
         /// Create mock of employer time stamps source based on passed stamps.
         /// </summary>

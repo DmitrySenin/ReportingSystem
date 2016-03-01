@@ -50,7 +50,7 @@
         /// Method should not throw any exceptions when working with empty collection.
         /// </summary>
         [TestCase]
-        public void VerifyFirstStamp_EmptyCollection_NoArgumentOutOfRangeExceptions()
+        public void VerifyFirstStamp_EmptyCollection_NoExceptions()
         {
             // Arrange
             DateTime targetDay = new DateTime(2016, 3, 1);
@@ -61,7 +61,7 @@
 
             // Act and Assert
             // Check that call method with empty collection not throwing any exceptions.
-            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.Not.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@
         /// When working with empty collection should not throw exceptions.
         /// </summary>
         [TestCase]
-        public void VerifyLastStamp_EmptyCollection_NoArgumenOutOfRangeExceptions()
+        public void VerifyLastStamp_EmptyCollection_NoExceptions()
         {
             // Arrange
             int targetEmployerID = 1;
@@ -213,7 +213,7 @@
             var protocol = new ReportProtocol<int>();
 
             // Act and assert
-            Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.Not.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
         }
         
         /// <summary>

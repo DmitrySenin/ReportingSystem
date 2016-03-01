@@ -293,6 +293,24 @@
             Assert.That(stamps, Is.EqualTo(expectedStamps));
         }
 
+        /// <summary>
+        /// Checks that system throw exceptions if reference to source is null.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_CollectionOfStampsIsNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = null;
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+
+            // Act and Assert
+            // Check that call method with null collection throws "ArgumentNullException".
+            Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
         #endregion
 
         #region VerifyStampsSequence Tests

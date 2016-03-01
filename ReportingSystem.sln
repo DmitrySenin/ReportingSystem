@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSource.StampsCollection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interaction.Console", "Interaction.Console\Interaction.Console.csproj", "{946B5A67-6F33-4FF6-98FC-20C42AC85BD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingSystem.Reports.Tests", "ReportingSystem.Reports.Tests\ReportingSystem.Reports.Tests.csproj", "{D9580715-9E5E-4FAE-ADB2-B28459363A56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{946B5A67-6F33-4FF6-98FC-20C42AC85BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{946B5A67-6F33-4FF6-98FC-20C42AC85BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{946B5A67-6F33-4FF6-98FC-20C42AC85BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9580715-9E5E-4FAE-ADB2-B28459363A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9580715-9E5E-4FAE-ADB2-B28459363A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9580715-9E5E-4FAE-ADB2-B28459363A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9580715-9E5E-4FAE-ADB2-B28459363A56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

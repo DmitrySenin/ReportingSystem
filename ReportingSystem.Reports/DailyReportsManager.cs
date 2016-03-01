@@ -123,6 +123,11 @@
         /// <returns>Checked stamps for daily reporting.</returns>
         internal List<EmployerTimeStamp> collectStapmsForDailyReport<T>(int employerID, DateTime day, ReportProtocol<T> protocol)
         {
+            if(protocol == null)
+            {
+                throw new ArgumentNullException("Protocol can't be null reference."); 
+            }
+
             List<EmployerTimeStamp> employerStamps = this.employerStampsSource.GetByEmployerIDForDay(employerID, day);
 
             if (employerStamps.Count == 0)
@@ -148,8 +153,18 @@
         /// <param name="protocol">Protocol of reporting.</param>
         internal void verifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
+            if (employerStamps == null)
+            {
+                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+            }
+
+            if (protocol == null)
+            {
+                throw new ArgumentNullException("Protocol can't be null reference.");
+            }
+
             // if first record is not in-stamp.
-            if (employerStamps[0].Type != StampType.In)
+            if (employerStamps.Count == 0 || employerStamps[0].Type != StampType.In)
             {
                 protocol.Notifications.Add(new Notification("First In-stamp was not found.", NotificationType.Warning));
                 protocol.Notifications.Add(new Notification("Begin of target day was added as first In-stamp.", NotificationType.Message));
@@ -176,8 +191,18 @@
         /// <param name="protocol">Protocol of reporting.</param>
         internal void verifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
+            if (employerStamps == null)
+            {
+                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+            }
+
+            if (protocol == null)
+            {
+                throw new ArgumentNullException("Protocol can't be null reference.");
+            }
+
             // if last record is not out-stamp.
-            if (employerStamps[employerStamps.Count - 1].Type != StampType.Out)
+            if (employerStamps.Count == 0 || employerStamps[employerStamps.Count - 1].Type != StampType.Out)
             {
                 protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
 
@@ -189,7 +214,8 @@
                 DateTime nextDayFindingDate = this.nextDayEarliestFindingTime(day);
 
                 // First stamp of next day is Out-stamp and satisfies restriction time.
-                if (employerStampsForNextDay.Count > 0 && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
+                if (employerStampsForNextDay != null && employerStampsForNextDay.Count > 0
+                    && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
                     protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
 
@@ -223,6 +249,16 @@
         /// <param name="protocol">Protocol of reporting.</param>
         internal void verifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
+            if (employerStamps == null)
+            {
+                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+            }
+
+            if (protocol == null)
+            {
+                throw new ArgumentNullException("Protocol can't be null reference.");
+            }
+
             for (int i = 0; i < employerStamps.Count - 1; )
             {
                 if (employerStamps[i].Type == employerStamps[i + 1].Type)

@@ -306,6 +306,41 @@
             Assert.That(stamps, Is.EqualTo(expectedStamps).Using(new EmployerTimeStampComparer()));
         }
 
+        /// <summary>
+        /// Tests that there won't be any changes if data is correct.
+        /// </summary>
+        [TestCase]
+        public void VerifyStampsSequence_DataIsCorrect_NoChanges()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) }
+            };
+            int originalStampsCount = stamps.Count;
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+            List<EmployerTimeStamp> expectedStamps = new List<EmployerTimeStamp>()
+            {
+                stamps[0],
+                stamps[1]
+            };
+
+            // Act
+            dailyReporter.verifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assertions
+            // Check that collections contain same items in same order.
+            Assert.That(stamps, Is.EqualTo(expectedStamps));
+        }
+
         #endregion
 
         /// <summary>

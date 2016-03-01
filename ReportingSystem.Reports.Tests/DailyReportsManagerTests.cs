@@ -137,10 +137,10 @@
         }
 
         /// <summary>
-        /// Check adding of out-stamp which exist in next day before 4.00 am.
+        /// Check adding of out-stamp next day before 4.00 am.
         /// </summary>
         [TestCase]
-        public void VerifyLastStamp_LastOutStampInNextDayBefore4am_AddOutStampFromNextDay()
+        public void VerifyLastStamp_LastOutStampNextDayBefore4am_AddOutStampFromNextDay()
         {
             // Arrange
             int targetEmployerID = 1;
@@ -158,6 +158,38 @@
 
             // expected added stamp has Out type and end of target day as time.
             var expectedStamp = stamps[stamps.Count - 1];
+
+            // Act
+            dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assert
+            // Check that item was added to collection.
+            Assert.That(stamps[stamps.Count - 1], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
+        }
+
+        /// <summary>
+        /// Verifying method add end of target day as last stamp 
+        /// even if exists out-stamp next day but its time after 4 am.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_LastOutStampNextDayAfter4am_AddEndOfTargetDayAsLastOfOutStamp()
+        {
+            // Arrange
+            int targetEmployerID = 1;
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(18) },
+
+                // In-stamp at 6.00 am of next day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddDays(1).AddHours(4).AddMinutes(1) }
+            };
+            var dailyReporter = this.createDailyReporter(stamps);
+            var protocol = new ReportProtocol<int>();
+
+            // expected added stamp has Out type and end of target day as time.
+            var expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(23).AddMinutes(59).AddSeconds(59) };
 
             // Act
             dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);

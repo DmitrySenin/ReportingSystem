@@ -467,7 +467,50 @@
         public void DailyReportsManager_StampsSourceIsNull_ThrowArgumentNullException()
         {
             Assert.That(() => new DailyReportsManager(null), Throws.Exception.TypeOf<ArgumentNullException>());
-        }    
+        }
+
+        #endregion
+
+        #region TimeOfWorkForDay Tests
+
+        /// <summary>
+        /// Test method of computation total time of work with absolute correct data.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_DataCorrect_CorrectTimeOfWork()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 11.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10).AddMinutes(10) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // Out-stamp at 14.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(18) },
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 7 hours and 10 minutes.
+            TimeSpan expectedTime = new TimeSpan(7, 10, 0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
 
         #endregion
 

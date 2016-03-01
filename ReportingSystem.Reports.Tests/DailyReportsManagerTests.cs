@@ -17,7 +17,7 @@
     class DailyReportsManagerTests
     {
         /// <summary>
-        /// 
+        /// Check existing in collection of stamps first stamp with In type.
         /// </summary>
         [TestCase]
         public void VerifyFirstStamp_NoFirstInStamp_AddBeginOfDayAsFirstInStamp()
@@ -43,6 +43,25 @@
             // Check 
             Assert.AreEqual(stamps.Count, originalStampsCount + 1);
             Assert.That(stamps[0], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
+        }
+
+        /// <summary>
+        /// Method should not throw any exceptions when working with empty collection.
+        /// </summary>
+        [TestCase]
+        public void VerifyFirstStamp_EmptyCollection_NoExceptions()
+        {
+            // Arrange
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
+            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+
+            // Act and Assert
+            // Check that call method with empty collection not throwing any exceptions.
+            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
         }
 
         /// <summary>

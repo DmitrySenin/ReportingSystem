@@ -16,6 +16,8 @@
     [TestFixture]
     class DailyReportsManagerTests
     {
+        #region VerifyFirstStamp Test
+
         /// <summary>
         /// Check existing in collection of stamps first stamp with In type.
         /// </summary>
@@ -63,6 +65,44 @@
             // Check that call method with empty collection not throwing any exceptions.
             Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
         }
+
+        /// <summary>
+        /// Check that method do not any changes if first in-stamp for target day exists.
+        /// </summary>
+        [TestCase]
+        public void VerifyFirstStamp_DataIsCorrect_NoAnyChange()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) }
+            };
+            int originalStampsCount = stamps.Count;
+            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
+            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+            List<EmployerTimeStamp> expectedStamps = new List<EmployerTimeStamp>()
+            {
+                stamps[0],
+                stamps[1]
+            };
+
+            // Act
+            dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assertions
+            // Check that collections contain same items in same order.
+            Assert.That(stamps, Is.EqualTo(expectedStamps));
+        }
+
+        #endregion
 
         /// <summary>
         /// Create mock of employer time stamps source based on passed stamps.

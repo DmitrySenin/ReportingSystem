@@ -14,7 +14,7 @@
     /// Used name convention: [MethodUnderTest]_[State]_[Expected].
     /// </summary>
     [TestFixture]
-    class DailyReportsManagerTests
+    internal class DailyReportsManagerTests
     {
         #region VerifyFirstStamp Test
 
@@ -97,6 +97,43 @@
             // Assertions
             // Check that collections contain same items in same order.
             Assert.That(stamps, Is.EqualTo(expectedStamps));
+        }
+
+        #endregion
+
+        #region VerifyFirstStamp Tests
+
+        /// <summary>
+        /// Verifying method should add end of target day as last Out-stamp.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_NoOutStampForTargetDay_AddEndOfTargetDayAsLastOfOutStamp()
+        {
+            // Arrange
+            int targetEmployerID = 1;
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(18) },
+
+                // In-stamp at 6.00 pm of next day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddDays(1).AddHours(6) }
+            };
+            var dailyReporter = this.createDailyReporter(stamps);
+            var protocol = new ReportProtocol<int>();
+
+            // expected added stamp has Out type and end of target day as time.
+            var expectedCollectionSize = stamps.Count + 1;
+            var expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(23).AddMinutes(59).AddSeconds(59) };
+
+            // Act
+            dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assert
+            // Check that item was added to collection.
+            Assert.That(stamps.Count, Is.EqualTo(expectedCollectionSize));
+            Assert.That(stamps[stamps.Count - 1], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
         }
 
         #endregion

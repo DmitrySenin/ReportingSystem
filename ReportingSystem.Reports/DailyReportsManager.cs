@@ -24,7 +24,7 @@
         {
             if (employerStampsSource == null)
             {
-                throw new ArgumentNullException("Reference to source of data can't be null.");
+                throw new ArgumentNullException(ReporterMessages.StampsSourceReferenceIsNull);
             }
 
             this.employerStampsSource = employerStampsSource;
@@ -51,7 +51,7 @@
 
             if (employerStamps.Count == 0)
             {
-                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.EmployerStampsNotFound, NotificationType.Message));
             }
 
             TimeSpan result = new TimeSpan(0);
@@ -89,7 +89,7 @@
 
             if (employerStamps.Count == 0)
             {
-                protocol.Notifications.Add(new Notification("Could not found stamps of employer for requested day.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.EmployerStampsNotFound, NotificationType.Message));
             }
 
             List<Respite> result = new List<Respite>();
@@ -125,7 +125,7 @@
         {
             if(protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference."); 
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull); 
             }
 
             List<EmployerTimeStamp> employerStamps = this.employerStampsSource.GetByEmployerIDForDay(employerID, day);
@@ -155,19 +155,19 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             // if first record is not in-stamp.
             if (employerStamps.Count == 0 || employerStamps[0].Type != StampType.In)
             {
-                protocol.Notifications.Add(new Notification("First In-stamp was not found.", NotificationType.Warning));
-                protocol.Notifications.Add(new Notification("Begin of target day was added as first In-stamp.", NotificationType.Message));
+                protocol.Notifications.Add(new Notification(ReporterMessages.FirstInStampNotFound, NotificationType.Warning));
+                protocol.Notifications.Add(new Notification(ReporterMessages.BeginDayAsInStampAdded, NotificationType.Message));
 
                 EmployerTimeStamp firstInStamp = new EmployerTimeStamp();
                 firstInStamp.EmployerID = employerID;
@@ -193,18 +193,18 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             // if last record is not out-stamp.
             if (employerStamps.Count == 0 || employerStamps[employerStamps.Count - 1].Type != StampType.Out)
             {
-                protocol.Notifications.Add(new Notification("Last out-stamp was not found.", NotificationType.Warning));
+                protocol.Notifications.Add(new Notification(ReporterMessages.LastOutStampNotFound, NotificationType.Warning));
 
                 // Date of next day.
                 DateTime nextDay = day.AddDays(1);
@@ -217,13 +217,13 @@
                 if (employerStampsForNextDay != null && employerStampsForNextDay.Count > 0
                     && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
-                    protocol.Notifications.Add(new Notification("First Out-stamp of next day was added as last Out-stamp.", NotificationType.Message));
+                    protocol.Notifications.Add(new Notification(ReporterMessages.FirstOutNextDayAsLast, NotificationType.Message));
 
                     employerStamps.Add(employerStampsForNextDay[0]);
                 }
                 else
                 {
-                    protocol.Notifications.Add(new Notification("End of target day was added as last Out-stamp.", NotificationType.Message));
+                    protocol.Notifications.Add(new Notification(ReporterMessages.EndDayAsLastOutStamp, NotificationType.Message));
 
                     // Added stamp.
                     EmployerTimeStamp lastOutStamp = new EmployerTimeStamp();
@@ -251,12 +251,12 @@
         {
             if (employerStamps == null)
             {
-                throw new ArgumentNullException("Collection of stamps can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
             if (protocol == null)
             {
-                throw new ArgumentNullException("Protocol can't be null reference.");
+                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
             for (int i = 0; i < employerStamps.Count - 1; )
@@ -265,7 +265,7 @@
                 {
                     if (employerStamps[i].Time == employerStamps[i + 1].Time)
                     {
-                        protocol.Notifications.Add(new Notification("Equal stamps was found. One of them was removed.", NotificationType.Warning));
+                        protocol.Notifications.Add(new Notification(ReporterMessages.OneOfEqualStampsRemoved, NotificationType.Warning));
                         employerStamps.RemoveAt(i + 1);
 
                         // Indexer should not be changed because 
@@ -273,7 +273,7 @@
                     }
                     else
                     {
-                        protocol.Notifications.Add(new Notification("Found two followed stamps of one type. Add new between them at the middle.", NotificationType.Warning));
+                        protocol.Notifications.Add(new Notification(ReporterMessages.NewStampInMiddleBetweenSameType, NotificationType.Warning));
 
                         // Compute difference in milliseconds.
                         double diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).TotalMilliseconds;

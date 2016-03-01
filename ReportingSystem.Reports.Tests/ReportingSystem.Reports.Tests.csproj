@@ -48,9 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DailyReportsManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReportingSystem.Core\ReportingSystem.Core.csproj">
+      <Project>{826551e0-63ad-4cd5-9eff-d665d5465e29}</Project>
+      <Name>ReportingSystem.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReportingSystem.Reports\ReportingSystem.Reports.csproj">
       <Project>{c36bdc5c-ddf0-4999-b348-3962222115d6}</Project>
       <Name>ReportingSystem.Reports</Name>
@@ -58,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

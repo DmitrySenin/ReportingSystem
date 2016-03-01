@@ -9,9 +9,42 @@
 
     using ReportingSystem.Core;
 
+    /// <summary>
+    /// Test of daily reporter manager.
+    /// Used name convention: [MethodUnderTest]_[State]_[Expected].
+    /// </summary>
     [TestFixture]
     class DailyReportsManagerTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestCase]
+        public void VerifyFirstStamp_NoFirstInStamp_AddBeginOfDayAsFirstInStamp()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay }
+            };
+            int originalStampsCount = stamps.Count;
+            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
+            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            EmployerTimeStamp expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = new DateTime(targetDay.Year, targetDay.Month, targetDay.Day, 0, 0, 0)};
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+
+            // Act
+            dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assertions
+            // Check 
+            Assert.AreEqual(stamps.Count, originalStampsCount + 1);
+            Assert.That(stamps[0], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
+        }
+
         /// <summary>
         /// Create mock of employer time stamps source based on passed stamps.
         /// </summary>

@@ -50,7 +50,7 @@
         /// Method should not throw any exceptions when working with empty collection.
         /// </summary>
         [TestCase]
-        public void VerifyFirstStamp_EmptyCollection_NoExceptions()
+        public void VerifyFirstStamp_EmptyCollection_NoArgumentOutOfRangeExceptions()
         {
             // Arrange
             DateTime targetDay = new DateTime(2016, 3, 1);
@@ -61,7 +61,7 @@
 
             // Act and Assert
             // Check that call method with empty collection not throwing any exceptions.
-            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
+            Assert.That(() => dailyReporter.verifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.Not.TypeOf<ArgumentOutOfRangeException>());
         }
 
         /// <summary>
@@ -197,6 +197,23 @@
             // Assert
             // Check that item was added to collection.
             Assert.That(stamps[stamps.Count - 1], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
+        }
+
+        /// <summary>
+        /// When working with empty collection should not throw exceptions.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_EmptyCollection_NoArgumenOutOfRangeExceptions()
+        {
+            // Arrange
+            int targetEmployerID = 1;
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            var dailyReporter = this.createDailyReporter(stamps);
+            var protocol = new ReportProtocol<int>();
+
+            // Act and assert
+            Assert.That(() => dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.Not.TypeOf<ArgumentOutOfRangeException>());
         }
 
         #endregion

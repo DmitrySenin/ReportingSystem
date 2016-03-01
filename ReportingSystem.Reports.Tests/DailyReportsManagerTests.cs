@@ -136,6 +136,37 @@
             Assert.That(stamps[stamps.Count - 1], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
         }
 
+        /// <summary>
+        /// Check adding of out-stamp which exist in next day before 4.00 am.
+        /// </summary>
+        [TestCase]
+        public void VerifyLastStamp_LastOutStampInNextDayBefore4am_AddOutStampFromNextDay()
+        {
+            // Arrange
+            int targetEmployerID = 1;
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(18) },
+
+                // In-stamp at 3.00 pm of next day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddDays(1).AddHours(3) }
+            };
+            var dailyReporter = this.createDailyReporter(stamps);
+            var protocol = new ReportProtocol<int>();
+
+            // expected added stamp has Out type and end of target day as time.
+            var expectedStamp = stamps[stamps.Count - 1];
+
+            // Act
+            dailyReporter.verifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assert
+            // Check that item was added to collection.
+            Assert.That(stamps[stamps.Count - 1], Is.EqualTo(expectedStamp).Using(new EmployerTimeStampComparer()));
+        }
+
         #endregion
 
         /// <summary>

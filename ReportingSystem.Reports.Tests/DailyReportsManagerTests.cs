@@ -253,6 +253,61 @@
 
         #endregion
 
+        #region VerifyStampsSequence Tests
+
+        /// <summary>
+        /// Tested method should add missing stamps between consecutive ones with same type in the middle.
+        /// </summary>
+        [TestCase]
+        public void VerifyStampsSequence_NoSomeStampsInSequence_AddNonexistentStampsInMiddle()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // In-stamp at 11.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9).AddMinutes(10) },
+
+                // Out-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(12) },
+
+                // Out-stamp at 14.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(14) },
+            };
+            int originalStampsCount = stamps.Count;
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+            ReportProtocol<int> protocol = new ReportProtocol<int>();
+            List<EmployerTimeStamp> expectedStamps = new List<EmployerTimeStamp>()
+            {
+                stamps[0],
+
+                // Should be added! Out-stamp at 11.00 am of target day.
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9).AddMinutes(5) },
+
+                stamps[1],
+                stamps[2],
+
+                // Should be added! In-stamp at 13.00 am of target day.
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(13) },
+
+                stamps[3]
+            };
+
+            // Act
+            dailyReporter.verifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol);
+
+            // Assertions
+            // Check that collections contain same items in same order.
+            Assert.That(stamps, Is.EqualTo(expectedStamps).Using(new EmployerTimeStampComparer()));
+        }
+
+        #endregion
+
         /// <summary>
         /// Create mock of employer time stamps source based on passed stamps.
         /// </summary>

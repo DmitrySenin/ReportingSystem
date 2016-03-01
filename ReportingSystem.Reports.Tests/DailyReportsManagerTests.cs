@@ -33,8 +33,7 @@
                 new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay }
             };
             int originalStampsCount = stamps.Count;
-            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
-            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
             EmployerTimeStamp expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = new DateTime(targetDay.Year, targetDay.Month, targetDay.Day, 0, 0, 0)};
             ReportProtocol<int> protocol = new ReportProtocol<int>();
 
@@ -57,8 +56,7 @@
             DateTime targetDay = new DateTime(2016, 3, 1);
             int targetEmployerID = 1;
             List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
-            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
-            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
             ReportProtocol<int> protocol = new ReportProtocol<int>();
 
             // Act and Assert
@@ -85,8 +83,7 @@
                 new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) }
             };
             int originalStampsCount = stamps.Count;
-            IEmployerStampsSource stampsSource = this.createStampsSource(stamps);
-            DailyReportsManager dailyReporter = new DailyReportsManager(stampsSource);
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
             ReportProtocol<int> protocol = new ReportProtocol<int>();
             List<EmployerTimeStamp> expectedStamps = new List<EmployerTimeStamp>()
             {
@@ -140,6 +137,16 @@
             }
 
             return mockStampsSource.Object;
+        }
+
+        /// <summary>
+        /// Create reporter with mock source of stamps.
+        /// </summary>
+        /// <param name="stamps">Stamps which will used for mock source of data.</param>
+        /// <returns>Instance of <see cref="DailyReportsManager"/> with mock source of stamps.</returns>
+        private DailyReportsManager createDailyReporter(List<EmployerTimeStamp> stamps)
+        {
+            return new DailyReportsManager(this.createStampsSource(stamps));
         }
     }
 }

@@ -538,6 +538,54 @@
             Assert.That(protocol.Result, Is.EqualTo(expectedTime));
         }
 
+        /// <summary>
+        /// Test method of computation total time of work if data for day does not exist.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_ExistAllIncorrectnesses_CorrectTimeOfWork()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // Out-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9) },
+
+                // Same stamp as above.
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) },
+
+                // In-stamp at 11.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(11) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // Out-stamp at 3.00 am of next day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddDays(1).AddHours(3) },
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 25 hours 0 minutes and 0 seconds.
+            TimeSpan expectedTime = new TimeSpan(25, 0, 0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
+
         #endregion
 
         /// <summary>

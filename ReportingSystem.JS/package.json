@@ -1,0 +1,19 @@
+{
+  "name": "reporting-system",
+  "version": "1.0.0",
+  "description": "Creates reports based on time stamps of employers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeninDmitry/ReportingSystem.git"
+  },
+  "author": "dmitry.senin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeninDmitry/ReportingSystem/issues"
+  },
+  "homepage": "https://github.com/SeninDmitry/ReportingSystem#readme"
+}

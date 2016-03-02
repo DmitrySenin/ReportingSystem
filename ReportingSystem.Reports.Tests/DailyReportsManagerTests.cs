@@ -588,6 +588,194 @@
 
         #endregion
 
+        #region RespitesForDay Tests
+
+        /// <summary>
+        /// Test computation of respites for day if data in source is absolutely correct.
+        /// </summary>
+        [TestCase]
+        public void RespitesForDay_DataCorrect_AllRespitesFound()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            TimeSpan maxRespiteDuration = new TimeSpan(0, 15, 0);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) },
+
+                // In-stamp at 10.10 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(10).AddSeconds(10) },
+
+                // Out-stamp at 12.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(12) },
+
+                // In-stamp at 12.15 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12).AddMinutes(15).AddSeconds(1) },
+
+                // Out-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(18) }
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // All expected respites.
+            // Between first and second stamps.
+            // Between third and forth stamps.
+            List<Respite> expectedRespites = new List<Respite>()
+            {
+                new Respite(stamps[1].Time, stamps[2].Time)
+            };
+
+            // Act
+            var protocol = dailyReporter.RespitesForDay(targetEmployerID, targetDay, maxRespiteDuration);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
+        }
+
+        /// <summary>
+        /// Test that if there is no stamps for day then system should not find any respites.
+        /// </summary>
+        [TestCase]
+        public void RespitesForDay_NoStampsForDay_NoRespitesFound()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            TimeSpan maxRespiteDuration = new TimeSpan(0, 15, 0);
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // No expected respites.
+            List<Respite> expectedRespites = new List<Respite>();
+
+            // Act
+            var protocol = dailyReporter.RespitesForDay(targetEmployerID, targetDay, maxRespiteDuration);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
+        }
+
+        /// <summary>
+        /// Test that if maximum duration of respite equals zero then system does not found any respites.
+        /// Even if there is consecutive Out and In stamps with equal time because
+        /// source of stamps sorts stamps by ID of type too and In-stamp type's ID less then Out one.
+        /// </summary>
+        [TestCase]
+        public void RespitesForDay_MaxRespiteDurationEqualsZero_NoRepitesFound()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) },
+
+                // In-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(10) },
+
+                // Out-stamp at 12.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(12) },
+
+                // In-stamp at 12.15 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12).AddMinutes(15) },
+
+                // Out-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(18) }
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Maximum duration of respite.
+            TimeSpan maxRespiteDuration = new TimeSpan(0, 0, 0);
+
+            // Expected time of work.
+            // No expected respites.
+            List<Respite> expectedRespites = new List<Respite>();
+
+            // Act
+            var protocol = dailyReporter.RespitesForDay(targetEmployerID, targetDay, maxRespiteDuration);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
+        }
+
+        /// <summary>
+        /// Checks that if source data is incorrect than it will be completed and repaired based on built-in logic.
+        /// So all respites will be found.
+        /// </summary>
+        [TestCase]
+        public void RespitesForDay_IncorrectData_AllRespitesFound()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+
+            // Maximum duration of respite.
+            // It is 10 minutes.
+            TimeSpan maxRespiteDuration = new TimeSpan(0, 10, 0);
+
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 9.10 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9).Add(maxRespiteDuration) },
+
+                // In-stamp at 9.10 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9).Add(maxRespiteDuration) },
+
+                // Out-stamp at 12.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(12) },
+
+                // In-stamp at 12:10:00.0001 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12).Add(maxRespiteDuration).AddMilliseconds(1) },
+
+                // Out-stamp at 6.00 pm of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(18) }
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // This list looks like this because system should do the following steps to repair data:
+            //      1. Source data will be sorted and 2nd record(start with 0) will be 1st.
+            //      2. Now we have two In-stamps 0 and 1st so system create new Out-stamp in the middle of these ones.
+            //      3. So now we have 1st Out-stamp(was added at 2nd step) and its time equals 9 hours and half of maximum respite time minutes.
+            // So obvious that difference between 1st(Out-stamp) and 2nd(In-stamp) is less 
+            // than maximum respite duration because equals half of it.
+            List<Respite> expectedRespites = new List<Respite>()
+            {
+                new Respite(targetDay.AddHours(9).AddMinutes(maxRespiteDuration.Minutes / 2),  targetDay.AddHours(9).Add(maxRespiteDuration))
+            };
+
+            // Act
+            var protocol = dailyReporter.RespitesForDay(targetEmployerID, targetDay, maxRespiteDuration);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedRespites).Using(new RespitesComparer()));
+        }
+
+        #endregion
+
         /// <summary>
         /// Create mock of employer time stamps source based on passed stamps.
         /// </summary>

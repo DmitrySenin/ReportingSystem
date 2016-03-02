@@ -47,6 +47,7 @@
     <Compile Include="DailyReportsManager.cs" />
     <Compile Include="ReportProtocol.cs" />
     <Compile Include="Respite.cs" />
+    <Compile Include="RespitesComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReportingSystem.Core\ReportingSystem.Core.csproj">

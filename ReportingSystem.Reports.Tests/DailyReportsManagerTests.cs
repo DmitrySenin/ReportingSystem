@@ -467,7 +467,124 @@
         public void DailyReportsManager_StampsSourceIsNull_ThrowArgumentNullException()
         {
             Assert.That(() => new DailyReportsManager(null), Throws.Exception.TypeOf<ArgumentNullException>());
-        }    
+        }
+
+        #endregion
+
+        #region TimeOfWorkForDay Tests
+
+        /// <summary>
+        /// Test method of computation total time of work with absolute correct data.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_DataCorrect_CorrectTimeOfWork()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // In-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 11.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10).AddMinutes(10) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // Out-stamp at 14.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(18) },
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 7 hours and 10 minutes.
+            TimeSpan expectedTime = new TimeSpan(7, 10, 0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
+
+        /// <summary>
+        /// Test method of computation total time of work if data for day does not exist.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_NoDataForDay_TimeOfWorkEqualsZero()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>();
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 0 hours 0 minutes and 0 seconds.
+            TimeSpan expectedTime = new TimeSpan(0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
+
+        /// <summary>
+        /// Test method of computation total time of work if data for day does not exist.
+        /// </summary>
+        [TestCase]
+        public void TimeOfWorkForDay_ExistAllIncorrectnesses_CorrectTimeOfWork()
+        {
+            // Arrange
+            // Target day is 01.03.2016
+            DateTime targetDay = new DateTime(2016, 3, 1);
+            int targetEmployerID = 1;
+            List<EmployerTimeStamp> stamps = new List<EmployerTimeStamp>()
+            {
+                // Out-stamp at 9.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9) },
+
+                // Same stamp as above.
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(9) },
+
+                // Out-stamp at 10.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(10) },
+
+                // In-stamp at 11.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(11) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // In-stamp at 12.00 am of target day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.In, Time = targetDay.AddHours(12) },
+
+                // Out-stamp at 3.00 am of next day
+                new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddDays(1).AddHours(3) },
+            };
+            DailyReportsManager dailyReporter = this.createDailyReporter(stamps);
+
+            // Expected time of work.
+            // It should 25 hours 0 minutes and 0 seconds.
+            TimeSpan expectedTime = new TimeSpan(25, 0, 0);
+
+            // Act
+            var protocol = dailyReporter.TimeOfWorkForDay(targetEmployerID, targetDay);
+
+            // Assertions
+            // Check that computation was successful carried out.
+            Assert.That(protocol.IsSucceed, Is.True);
+            Assert.That(protocol.Result, Is.EqualTo(expectedTime));
+        }
 
         #endregion
 
@@ -479,7 +596,7 @@
         {
             Mock<IEmployerStampsSource> mockStampsSource = new Mock<IEmployerStampsSource>();
 
-            if (stamps != null)
+            if (stamps != null && stamps.Count != 0)
             {
                 mockStampsSource.Setup(m => m.GetAll()).Returns(stamps);
 
@@ -507,6 +624,12 @@
                 {
                     mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.Is<int>(id => id == empDayStamps.EmployerID), It.Is<DateTime>(day => day == empDayStamps.Day))).Returns(empDayStamps.Stamps);
                 }
+            }
+            else
+            {
+                mockStampsSource.Setup(m => m.GetAll()).Returns(new List<EmployerTimeStamp>());
+                mockStampsSource.Setup(m => m.GetByEmployerID(It.IsAny<int>())).Returns(new List<EmployerTimeStamp>());
+                mockStampsSource.Setup(m => m.GetByEmployerIDForDay(It.IsAny<int>(), It.IsAny<DateTime>())).Returns(new List<EmployerTimeStamp>());
             }
 
             return mockStampsSource.Object;

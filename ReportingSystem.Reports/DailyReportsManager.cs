@@ -124,7 +124,7 @@
         {
             if(notifications == null)
             {
-                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull); 
+                throw new ArgumentNullException(ReporterMessages.NotificationsRefrenceIsNull); 
             }
 
             List<EmployerTimeStamp> employerStamps = this.employerStampsSource.GetByEmployerIDForDay(employerID, day);
@@ -158,7 +158,7 @@
 
             if (notifications == null)
             {
-                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
+                throw new ArgumentNullException(ReporterMessages.NotificationsRefrenceIsNull);
             }
 
             // if first record is not in-stamp then insert begging of target day instead of it.
@@ -195,7 +195,7 @@
 
             if (notifications == null)
             {
-                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
+                throw new ArgumentNullException(ReporterMessages.NotificationsRefrenceIsNull);
             }
 
             // if last record is not out-stamp.
@@ -252,7 +252,7 @@
 
             if (notifications == null)
             {
-                throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
+                throw new ArgumentNullException(ReporterMessages.NotificationsRefrenceIsNull);
             }
 
             int i = 0;

@@ -16,6 +16,11 @@
         public static readonly string ProtocolReferenceIsNull = "Protocol can't be null reference.";
 
         /// <summary>
+        /// Desctibing message when reference to collection of notifications is null reference.
+        /// </summary>
+        public static readonly string NotificationsRefrenceIsNull = "Reference to collection of notifications can't be null.";
+
+        /// <summary>
         /// Describing message when reference to stamps collections is null.
         /// </summary>
         public static readonly string StampsCollectionReferenceIsNull = "Collection of stamps can't be null reference.";

@@ -40,7 +40,7 @@
         {
             ReportProtocol<TimeSpan> protocol = new ReportProtocol<TimeSpan>();
 
-            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<TimeSpan>(employerID, day, protocol.Notifications);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport(employerID, day, protocol.Notifications);
 
             // There is errors that can't be repaired.
             if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
@@ -78,7 +78,7 @@
         {
             ReportProtocol<List<Respite>> protocol = new ReportProtocol<List<Respite>>();
 
-            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<List<Respite>>(employerID, day, protocol.Notifications);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport(employerID, day, protocol.Notifications);
 
             // There is errors that can't be repaired.
             if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
@@ -121,7 +121,7 @@
         /// <param name="day">Reporting day.</param>
         /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
         /// <returns>Checked stamps for daily reporting.</returns>
-        internal List<EmployerTimeStamp> CollectStapmsForDailyReport<T>(int employerID, DateTime day, List<Notification> notifications)
+        internal List<EmployerTimeStamp> CollectStapmsForDailyReport(int employerID, DateTime day, List<Notification> notifications)
         {
             if(notifications == null)
             {
@@ -135,9 +135,9 @@
                 return employerStamps;
             }
 
-            this.VerifyFirstStamp<T>(employerStamps, employerID, day, notifications);
-            this.VerifyLastStamp<T>(employerStamps, employerID, day, notifications);
-            this.VerifyStampsSequence<T>(employerStamps, employerID, day, notifications);
+            this.VerifyFirstStamp(employerStamps, employerID, day, notifications);
+            this.VerifyLastStamp(employerStamps, employerID, day, notifications);
+            this.VerifyStampsSequence(employerStamps, employerID, day, notifications);
 
             return employerStamps;
         }
@@ -151,7 +151,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
-        internal void VerifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
+        internal void VerifyFirstStamp(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {
@@ -189,7 +189,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
-        internal void VerifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
+        internal void VerifyLastStamp(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {
@@ -247,7 +247,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
-        internal void VerifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
+        internal void VerifyStampsSequence(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {

@@ -12,10 +12,10 @@
     {
         static void Main(string[] args)
         {
-            DailyReportsManager dailyReporter = new DailyReportsManager(buildStampsSource());
+            DailyReportsManager dailyReporter = new DailyReportsManager(BuildStampsSource());
 
-            ReportProtocol<TimeSpan> dayWork = dailyReporter.TimeOfWorkForDay(targetEmployer(), tagetDay());
-            ReportProtocol<List<Respite>> dayRespites = dailyReporter.RespitesForDay(targetEmployer(), tagetDay(), maxRespiteDuration());
+            ReportProtocol<TimeSpan> dayWork = dailyReporter.TimeOfWorkForDay(TargetEmployer(), TagetDay());
+            ReportProtocol<List<Respite>> dayRespites = dailyReporter.RespitesForDay(TargetEmployer(), TagetDay(), MaxRespiteDuration());
 
             Console.WriteLine("Time for day:");
             if (dayWork.IsSucceed)
@@ -51,22 +51,22 @@
             Console.ReadKey();
         }
 
-        private static IEmployerStampsSource buildStampsSource()
+        private static IEmployerStampsSource BuildStampsSource()
         {
             return new StampsSource();
         }
 
-        private static int targetEmployer()
+        private static int TargetEmployer()
         {
             return 1;
         }
 
-        private static DateTime tagetDay()
+        private static DateTime TagetDay()
         {
             return new DateTime(2016, 2, 29);
         }
 
-        private static TimeSpan maxRespiteDuration()
+        private static TimeSpan MaxRespiteDuration()
         {
             // 15 min. respite duration.
             return new TimeSpan(0, 15, 0);

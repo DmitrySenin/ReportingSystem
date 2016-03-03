@@ -7,6 +7,7 @@ var ReportProtocol = require('./ReportProtocol.js');
 
 var UndefinedSourceDataReference = "Source of data can't be null or undefined.";
 var NotificationsIsNotArray = "Notifications should be an array.";
+var StampsIsNotArray = "System can work only with array of time stamps.";
 var SourceDataIncorrectDataFormat = "Source of stamps should return array of employer stamps.";
 var UndefinedStampsCollection = "Collection of stamps can't be null or undefined.";
 var FirstInStampNotFound = "First In-stamp was not found.";
@@ -14,6 +15,8 @@ var BeginDayAsInStampAdded = "Begin of target day was added as first In-stamp.";
 var LastOutStampNotFound = "Last out-stamp was not found.";
 var FirstOutNextDayAsLast = "First Out-stamp of next day was added as last Out-stamp.";
 var EndDayAsLastOutStamp = "End of target day was added as last Out-stamp.";
+var OneOfEqualStampsRemoved = "Equal stamps was found. One of them was removed.";
+var NewStampInMiddleBetweenSameType = "Found two followed stamps of one type. Add new between them at the middle.";
 
 /**
  * Create object which collect and correct data for daily reports.
@@ -152,6 +155,55 @@ function DailyDataCorrector(dataSource) {
 	this._verifyStampsSequence = function(stamps, employerID, day, notifications) {
 		if(!Array.isArray(notifications)) {
 			throw new Error(NotificationsIsNotArray);
+		}
+
+		if(stamps === undefined || stamps === null) {
+			throw new Error(UndefinedStampsCollection);
+		}
+
+		if(!Array.isArray(stamps)) {
+			throw new Error(StampsIsNotArray);
+		}
+
+		i = 0;
+		while(i < stamps.length - 1) {
+
+			// If two consecutive stamps have equal type.
+			// Then compare time and delete one of the, if times are equal
+			// else insert stamp between them in the middle. 
+			if(!StampType.Compare(stamps[i].Type, stamps[i + 1].Type)) {
+
+				// Stamps' times are equal.
+				if(stamps[i].Time === stamps[i + 1].Time) {
+					notifications.push(new Notification(OneOfEqualStampsRemoved, NotificationType.Warning));
+
+					stamps.splice(i + 1, 1);
+
+					// Indexer should not be changed because 
+                    // new (i + 1) element can be same type and time again.
+                    // So we need to compare i-th and (i + 1)-th again.
+				} else {
+					notifications.push(new Notification(NewStampInMiddleBetweenSameType, NotificationType.Warning));
+
+					diffInMilliseconds = stamps[i + 1].Time - stamps[i].Time;
+
+					// Compute time in the middle of stamps.
+					middleDate = new Date(stamps[i].Time);
+					middleDate.setDate(middleDate.getDate() + diffInMilliseconds / 2);
+
+					middleStampType = StampType.Compare(stamps[i].Type, StampType.In) ? StampType.Out : StampType.In;
+					middleStamp = new EmployerTimeStamp(employerID, middleStampType, middleDate);
+
+					// Insert middle stamp stamp to (i + 1) place.
+					stamps.splice(i + 1, 0, middleStamp);
+
+					// Go to element that was (i + 1) before insert.
+					i += 2;
+				}
+			} else {
+				// Go to next element to check.
+				i++;
+			}
 		}
 	}
 

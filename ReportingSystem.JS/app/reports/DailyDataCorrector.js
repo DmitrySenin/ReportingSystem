@@ -6,17 +6,17 @@ var Notification = require('./Notification.js');
 var ReportProtocol = require('./ReportProtocol.js');
 
 var messages = {
-	UndefinedSourceDataReference : "Source of data can't be null or undefined.";
-	NotificationsIsNotArray : "Notifications should be an array.";
-	StampsIsNotArray : "System can work only with array of time stamps.";
-	SourceDataIncorrectDataFormat : "Source of stamps should return array of employer stamps.";
-	UndefinedStampsCollection : "Collection of stamps can't be null or undefined.";
-	FirstInStampNotFound : "First In-stamp was not found.";
-	BeginDayAsInStampAdded : "Begin of target day was added as first In-stamp.";
-	LastOutStampNotFound : "Last out-stamp was not found.";
-	FirstOutNextDayAsLast : "First Out-stamp of next day was added as last Out-stamp.";
-	EndDayAsLastOutStamp : "End of target day was added as last Out-stamp.";
-	OneOfEqualStampsRemoved : "Equal stamps was found. One of them was removed.";
+	UndefinedSourceDataReference : "Source of data can't be null or undefined.",
+	NotificationsIsNotArray : "Notifications should be an array.",
+	StampsIsNotArray : "System can work only with array of time stamps.",
+	SourceDataIncorrectDataFormat : "Source of stamps should return array of employer stamps.",
+	UndefinedStampsCollection : "Collection of stamps can't be null or undefined.",
+	FirstInStampNotFound : "First In-stamp was not found.",
+	BeginDayAsInStampAdded : "Begin of target day was added as first In-stamp.",
+	LastOutStampNotFound : "Last out-stamp was not found.",
+	FirstOutNextDayAsLast : "First Out-stamp of next day was added as last Out-stamp.",
+	EndDayAsLastOutStamp : "End of target day was added as last Out-stamp.",
+	OneOfEqualStampsRemoved : "Equal stamps was found. One of them was removed.",
 	NewStampInMiddleBetweenSameType : "Found two followed stamps of one type. Add new between them at the middle."
 };
 

@@ -20,6 +20,4 @@ ReportProtocol.prototype.GetNotificationsOfType = function(neededType) {
 	});
 }
 
-module.exports = {
-	Create: ReportProtocol
-};
+module.exports = ReportProtocol;

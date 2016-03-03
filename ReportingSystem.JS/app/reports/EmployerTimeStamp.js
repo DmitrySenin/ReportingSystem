@@ -33,7 +33,4 @@ EmployerTimeStamp.Compare = function (x, y) {
 	}
 };
 
-module.exports = {
-	Create: EmployerTimeStamp,
-	Compare: EmployerTimeStamp.Compare
-};
+module.exports = EmployerTimeStamp;

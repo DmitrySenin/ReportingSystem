@@ -161,7 +161,7 @@
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
-            // if first record is not in-stamp.
+            // if first record is not in-stamp then insert begging of target day instead of it.
             if (employerStamps.Count == 0 || employerStamps[0].Type != StampType.In)
             {
                 notifications.Add(new Notification(ReporterMessages.FirstInStampNotFound, NotificationType.Warning));

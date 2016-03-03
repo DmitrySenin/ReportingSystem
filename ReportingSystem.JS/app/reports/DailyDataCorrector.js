@@ -1,9 +1,16 @@
 
-var ReportProtocol = require('ReportProtocol.js');
+var StampType = require('./StampType.js');
+var EmployerTimeStamp = require('./EmployerTimeStamp.js');
+var NotificationType = require('./NotificationType.js');
+var Notification = require('./Notification.js');
+var ReportProtocol = require('./ReportProtocol.js');
 
-var SourceDataReferenceIsUndefined = "Source of data can't be null or undefined.";
-var NotificationsIsNotArray = "Notifications should be array.";
+var UndefinedSourceDataReference = "Source of data can't be null or undefined.";
+var NotificationsIsNotArray = "Notifications should be an array.";
 var SourceDataIncorrectDataFormat = "Source of stamps should return array of employer stamps.";
+var UndefinedStampsCollection = "Collection of stamps can't be null or undefined.";
+var FirstInStampNotFound = "First In-stamp was not found.";
+var BeginDayAsInStampAdded = "Begin of target day was added as first In-stamp.";
 
 /**
  * Create object which collect and correct data for daily reports.
@@ -12,7 +19,7 @@ var SourceDataIncorrectDataFormat = "Source of stamps should return array of emp
 function DailyDataCorrector(dataSource) {
 	
 	if(dataSource === undefined || dataSource === null) {
-		throw new Error(SourceDataReferenceIsUndefined);
+		throw new Error(UndefinedSourceDataReference);
 	}
 
 	/**
@@ -59,6 +66,23 @@ function DailyDataCorrector(dataSource) {
 	this._verifyFirstStamp = function(stamps, employerID, day, notifications) {
 		if(!Array.isArray(notifications)) {
 			throw new Error(NotificationsIsNotArray);
+		}
+
+		if(stamps === undefined || stamps === null) {
+			throw new Error(UndefinedStampsCollection);
+		}
+
+		// if there is not first In-stamp
+		// add it as begging of target day.
+		if(stamps.length === 0 || stamps[0].Type !== StampType.In) {
+			notifications.push(new Notification(FirstInStampNotFound, NotificationType.Warning));
+			notifications.push(new Notification(BeginDayAsInStampAdded, NotificationType.Message));
+
+			beggingOfTargetDay = new Date(day.getYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
+
+			firstInStamp = new EmployerTimeStamp(employerID, StampType.In, beggingOfTargetDay);
+
+			stamps.unshift(firstInStamp);
 		}
 	}
 

@@ -78,6 +78,10 @@ function DailyDataCorrector(dataSource) {
 			throw new Error(UndefinedStampsCollection);
 		}
 
+		if(!Array.isArray(stamps)) {
+			throw new Error(StampsIsNotArray);
+		}
+
 		// if there is not first In-stamp
 		// add it as begging of target day.
 		if(stamps.length === 0 || stamps[0].Type !== StampType.In) {
@@ -107,6 +111,10 @@ function DailyDataCorrector(dataSource) {
 
 		if(stamps === undefined || stamps === null) {
 			throw new Error(UndefinedStampsCollection);
+		}
+
+		if(!Array.isArray(stamps)) {
+			throw new Error(StampsIsNotArray);
 		}
 
 		// if last stamps is not Out-stamp

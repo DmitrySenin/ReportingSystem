@@ -53,7 +53,7 @@
         /// <returns>Collection with stamps of some employer or empty collection.</returns>
         public List<EmployerTimeStamp> GetByEmployerID(int EmployerID)
         {
-            return this.addEmployerIDCondition(this.GetAll(), EmployerID).ToList();
+            return this.AddEmployerIDCondition(this.GetAll(), EmployerID).ToList();
         }
 
         /// <summary>
@@ -64,7 +64,7 @@
         /// <returns>Collection with requested stamps or empty list.</returns>
         public List<EmployerTimeStamp> GetByEmployerIDForDay(int EmployerID, DateTime Day)
         {
-            return this.addDayCondition(this.addEmployerIDCondition(this.GetAll(), EmployerID), Day).ToList();
+            return this.AddDayCondition(this.AddEmployerIDCondition(this.GetAll(), EmployerID), Day).ToList();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@
         /// <param name="employersStamps">Collection that should be constrained.</param>
         /// <param name="employerID">Target employer's unique identifier.</param>
         /// <returns>Lazy collection which should be transform to some collection to find necessary data.</returns>
-        private IEnumerable<EmployerTimeStamp> addEmployerIDCondition(IEnumerable<EmployerTimeStamp> employersStamps, int employerID)
+        private IEnumerable<EmployerTimeStamp> AddEmployerIDCondition(IEnumerable<EmployerTimeStamp> employersStamps, int employerID)
         {
             return employersStamps.Where(s => s.EmployerID == employerID);
         }
@@ -84,7 +84,7 @@
         /// <param name="employersStamps">Collection that should be constrained.</param>
         /// <param name="day">Target day.</param>
         /// <returns>Lazy collection which should be transform to some collection to find necessary data.</returns>
-        private IEnumerable<EmployerTimeStamp> addDayCondition(IEnumerable<EmployerTimeStamp> employersStamps, DateTime day)
+        private IEnumerable<EmployerTimeStamp> AddDayCondition(IEnumerable<EmployerTimeStamp> employersStamps, DateTime day)
         {
             return employersStamps.Where(s => s.Time.Date == day.Date);
         }

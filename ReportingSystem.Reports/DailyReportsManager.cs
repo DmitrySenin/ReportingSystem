@@ -40,7 +40,7 @@
         {
             ReportProtocol<TimeSpan> protocol = new ReportProtocol<TimeSpan>();
 
-            List<EmployerTimeStamp> employerStamps = this.collectStapmsForDailyReport<TimeSpan>(employerID, day, protocol);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<TimeSpan>(employerID, day, protocol);
 
             // There is errors that can't be repaired.
             if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
@@ -78,7 +78,7 @@
         {
             ReportProtocol<List<Respite>> protocol = new ReportProtocol<List<Respite>>();
 
-            List<EmployerTimeStamp> employerStamps = this.collectStapmsForDailyReport<List<Respite>>(employerID, day, protocol);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<List<Respite>>(employerID, day, protocol);
 
             // There is errors that can't be repaired.
             if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
@@ -121,7 +121,7 @@
         /// <param name="day">Reporting day.</param>
         /// <param name="protocol">Protocol of reporting.</param>
         /// <returns>Checked stamps for daily reporting.</returns>
-        internal List<EmployerTimeStamp> collectStapmsForDailyReport<T>(int employerID, DateTime day, ReportProtocol<T> protocol)
+        internal List<EmployerTimeStamp> CollectStapmsForDailyReport<T>(int employerID, DateTime day, ReportProtocol<T> protocol)
         {
             if(protocol == null)
             {
@@ -135,9 +135,9 @@
                 return employerStamps;
             }
 
-            this.verifyFirstStamp<T>(employerStamps, employerID, day, protocol);
-            this.verifyLastStamp<T>(employerStamps, employerID, day, protocol);
-            this.verifyStampsSequence<T>(employerStamps, employerID, day, protocol);
+            this.VerifyFirstStamp<T>(employerStamps, employerID, day, protocol);
+            this.VerifyLastStamp<T>(employerStamps, employerID, day, protocol);
+            this.VerifyStampsSequence<T>(employerStamps, employerID, day, protocol);
 
             return employerStamps;
         }
@@ -151,7 +151,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="protocol">Protocol of reporting.</param>
-        internal void verifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        internal void VerifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
             if (employerStamps == null)
             {
@@ -189,7 +189,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="protocol">Protocol of reporting.</param>
-        internal void verifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        internal void VerifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
             if (employerStamps == null)
             {
@@ -211,7 +211,7 @@
 
                 // Find records for next day.
                 List<EmployerTimeStamp> employerStampsForNextDay = this.employerStampsSource.GetByEmployerIDForDay(employerID, nextDay);
-                DateTime nextDayFindingDate = this.nextDayEarliestFindingTime(day);
+                DateTime nextDayFindingDate = this.NextDayEarliestFindingTime(day);
 
                 // First stamp of next day is Out-stamp and satisfies restriction time.
                 if (employerStampsForNextDay != null && employerStampsForNextDay.Count > 0
@@ -247,7 +247,7 @@
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
         /// <param name="protocol">Protocol of reporting.</param>
-        internal void verifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        internal void VerifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
         {
             if (employerStamps == null)
             {
@@ -303,7 +303,7 @@
         /// </summary>
         /// <param name="currentDay">Date of "current" day.</param>
         /// <returns>Time to restrict finding of data.</returns>
-        internal DateTime nextDayEarliestFindingTime(DateTime currentDay)
+        internal DateTime NextDayEarliestFindingTime(DateTime currentDay)
         {
             // 4 am of next day.
             DateTime nextDayTime = currentDay.AddDays(1);

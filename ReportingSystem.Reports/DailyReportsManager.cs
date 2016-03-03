@@ -116,7 +116,6 @@
         /// Gathers all data for daily report, check it and complete if necessary.
         /// Add important notification to protocol.
         /// </summary>
-        /// <typeparam name="T">Type of protocol result.</typeparam>
         /// <param name="employerID">Target employer's unique identifier.</param>
         /// <param name="day">Reporting day.</param>
         /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
@@ -146,7 +145,6 @@
         /// Check out first element of collection of stamps 
         /// to add if require non existent first In-stamp.
         /// </summary>
-        /// <typeparam name="T">Type of result of protocol.</typeparam>
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
@@ -184,7 +182,6 @@
         /// Check out last element of collection of stamps 
         /// to add if require non existent last out-stamp.
         /// </summary>
-        /// <typeparam name="T">Type of result of protocol.</typeparam>
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
@@ -242,7 +239,6 @@
         /// Check out sequence of stamps in collection
         /// that each In-stamp is followed by Out-stamp.
         /// </summary>
-        /// <typeparam name="T">Type of result of protocol.</typeparam>
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>

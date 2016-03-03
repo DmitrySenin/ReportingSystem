@@ -11,6 +11,9 @@ var SourceDataIncorrectDataFormat = "Source of stamps should return array of emp
 var UndefinedStampsCollection = "Collection of stamps can't be null or undefined.";
 var FirstInStampNotFound = "First In-stamp was not found.";
 var BeginDayAsInStampAdded = "Begin of target day was added as first In-stamp.";
+var LastOutStampNotFound = "Last out-stamp was not found.";
+var FirstOutNextDayAsLast = "First Out-stamp of next day was added as last Out-stamp.";
+var EndDayAsLastOutStamp = "End of target day was added as last Out-stamp.";
 
 /**
  * Create object which collect and correct data for daily reports.
@@ -98,6 +101,44 @@ function DailyDataCorrector(dataSource) {
 		if(!Array.isArray(notifications)) {
 			throw new Error(NotificationsIsNotArray);
 		}
+
+		if(stamps === undefined || stamps === null) {
+			throw new Error(UndefinedStampsCollection);
+		}
+
+		// if last stamps is not Out-stamp
+		// then find stamps for next day and check first one.
+		// or add end of target day as last Out-stamp.
+		if(stamps.length == 0 || stamps[stamps.length - 1].Type !== StampType.Out) {
+			notifications.push(new Notification(LastOutStampNotFound, NotificationType.Warning));
+
+			nextDay = new Date(day);
+			nextDay.setDate(nextDay.getDate() + 1);
+
+			stampsForNextDay = dataSource.GetByEmployerIDForDay(employerID, nextDay);
+			nextDayFindingDate = this._nextDayEarliestFindingTime(day);
+
+			// there is stamps for next day
+			// and first one is Out-stamp with time less or equal restricting time
+			// then add this one as last out stamp
+			// else add end of target day as last out stamp
+			if(stampsForNextDay != undefined 
+					&& stampsForNextDay.length > 0
+					&& stampsForNextDay[0].Type == StampType.Out 
+					&& stampsForNextDay[0].Time <= nextDayFindingDate) {
+				notifications.push(new Notification(FirstOutNextDayAsLast, NotificationType.Message));
+
+				stamps.push(stampsForNextDay[0]);
+			} else {
+				notifications.push(new Notification(EndDayAsLastOutStamp, NotificationType.Message));
+
+				nextDay.setHours(23, 59, 59, 999);
+
+				lastOutStamp = new EmployerTimeStamp(employerID, StampType.Out, nextDay);
+
+				stamps.push(lastOutStamp);
+			}
+		}
 	}
 
 	/**
@@ -112,6 +153,18 @@ function DailyDataCorrector(dataSource) {
 		if(!Array.isArray(notifications)) {
 			throw new Error(NotificationsIsNotArray);
 		}
+	}
+
+	/**
+	 * Build time of employer stamps to find records in next day.
+	 * @param  {Date} day Date of day for which finding date will be built.
+	 * @return {Date}     Time to restrict finding of data.
+	 */
+	this._nextDayEarliestFindingTime = function (day) {
+		// 4 am of next day.
+		nextDay = new Date(day);
+		nextDay.setDate(nextDay.getDate() + 1);
+		nextDay.setHours(4, 0, 0, 0);
 	}
 }
 

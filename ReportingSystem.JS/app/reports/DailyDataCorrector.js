@@ -25,7 +25,7 @@ var messages = {
  * @param {Object} dataSource Object which contains: GetAll, GetByEmployerID, GetByEmployerIDForDay methods.
  */
 function DailyDataCorrector(dataSource) {
-	
+
 	if(dataSource === undefined || dataSource === null) {
 		throw new Error(messages.UndefinedSourceDataReference);
 	}
@@ -50,7 +50,7 @@ DailyDataCorrector.prototype.CollectStampsForDailyReport = function(employerID, 
 	// Get stamps from source.
 	stamps = this._dataSource.GetByEmployerIDForDay(employerID, day);
 
-	if(Array.isArray(stamps)) {
+	if(!Array.isArray(stamps)) {
 		throw new Error(messages.SourceDataIncorrectDataFormat);
 	}
 

@@ -13,6 +13,4 @@ function Notification(description, type) {
 	Object.freeze(this);
 }
 
-module.exports = {
-	Create: Notification;
-};
+module.exports = Notification;

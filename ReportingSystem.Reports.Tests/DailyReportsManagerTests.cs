@@ -118,10 +118,10 @@
         }
 
         /// <summary>
-        /// Checks that system throw exceptions if reference to protocol is null.
+        /// Checks that system throw exceptions if reference to notifications collections is null.
         /// </summary>
         [TestCase]
-        public void VerifyFirstStamp_ProtocolReferenceIsNull_ThrowArgumentNullException()
+        public void VerifyFirstStamp_NotificationsIsNull_ThrowArgumentNullException()
         {
             // Arrange
             DateTime targetDay = new DateTime(2016, 3, 1);
@@ -312,10 +312,10 @@
         }
 
         /// <summary>
-        /// Checks that system throw exceptions if reference to protocol is null.
+        /// Checks that system throw exceptions if reference to collection of notifications is null.
         /// </summary>
         [TestCase]
-        public void VerifyLastStamp_ProtocolReferenceIsNull_ThrowArgumentNullException()
+        public void VerifyLastStamp_NotificationsIsNull_ThrowArgumentNullException()
         {
             // Arrange
             DateTime targetDay = new DateTime(2016, 3, 1);
@@ -438,10 +438,10 @@
         }
 
         /// <summary>
-        /// Checks that system throw exceptions if reference to protocol is null.
+        /// Checks that system throw exceptions if reference to notifications collection is null.
         /// </summary>
         [TestCase]
-        public void VerifyStampsSequence_ProtocolReferenceIsNull_ThrowArgumentNullException()
+        public void VerifyStampsSequence_NotificationsIsNull_ThrowArgumentNullException()
         {
             // Arrange
             DateTime targetDay = new DateTime(2016, 3, 1);

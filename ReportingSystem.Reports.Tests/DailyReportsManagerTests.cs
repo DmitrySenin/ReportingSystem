@@ -38,7 +38,7 @@
             ReportProtocol<int> protocol = new ReportProtocol<int>();
 
             // Act
-            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assertions
             // Check 
@@ -61,7 +61,7 @@
 
             // Act and Assert
             // Check that call method with empty collection not throwing any exceptions.
-            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
+            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Nothing);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@
             };
 
             // Act
-            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assertions
             // Check that collections contain same items in same order.
@@ -114,7 +114,7 @@
 
             // Act and Assert
             // Check that call method with null collection throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         /// <summary>
@@ -132,7 +132,7 @@
 
             // Act and Assert
             // Check that call method with null protocol throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         #endregion
@@ -164,7 +164,7 @@
             var expectedStamp = new EmployerTimeStamp() { EmployerID = targetEmployerID, Type = StampType.Out, Time = targetDay.AddHours(23).AddMinutes(59).AddSeconds(59) };
 
             // Act
-            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assert
             // Check that item was added to collection.
@@ -199,7 +199,7 @@
             stamps.RemoveAt(stamps.Count - 1);
 
             // Act
-            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assert
             // Check that item was added to collection.
@@ -234,7 +234,7 @@
             stamps.RemoveAt(stamps.Count - 1);
 
             // Act
-            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assert
             // Check that item was added to collection.
@@ -255,7 +255,7 @@
             var protocol = new ReportProtocol<int>();
 
             // Act and assert
-            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Nothing);
+            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Nothing);
         }
         
         /// <summary>
@@ -286,7 +286,7 @@
             };
 
             // Act
-            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyFirstStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assertions
             // Check that collections contain same items in same order.
@@ -308,7 +308,7 @@
 
             // Act and Assert
             // Check that call method with null collection throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         /// <summary>
@@ -326,7 +326,7 @@
 
             // Act and Assert
             // Check that call method with null protocol throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyLastStamp<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         #endregion
@@ -377,7 +377,7 @@
             };
 
             // Act
-            dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assertions
             // Check that collections contain same items in same order.
@@ -412,7 +412,7 @@
             };
 
             // Act
-            dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol);
+            dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol.Notifications);
 
             // Assertions
             // Check that collections contain same items in same order.
@@ -434,7 +434,7 @@
 
             // Act and Assert
             // Check that call method with null collection throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         /// <summary>
@@ -452,7 +452,7 @@
 
             // Act and Assert
             // Check that call method with null protocol throws "ArgumentNullException".
-            Assert.That(() => dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => dailyReporter.VerifyStampsSequence<int>(stamps, targetEmployerID, targetDay, protocol.Notifications), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         #endregion

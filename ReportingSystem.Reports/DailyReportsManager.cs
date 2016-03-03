@@ -40,7 +40,7 @@
         {
             ReportProtocol<TimeSpan> protocol = new ReportProtocol<TimeSpan>();
 
-            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<TimeSpan>(employerID, day, protocol);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<TimeSpan>(employerID, day, protocol.Notifications);
 
             // There is errors that can't be repaired.
             if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
@@ -78,7 +78,7 @@
         {
             ReportProtocol<List<Respite>> protocol = new ReportProtocol<List<Respite>>();
 
-            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<List<Respite>>(employerID, day, protocol);
+            List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<List<Respite>>(employerID, day, protocol.Notifications);
 
             // There is errors that can't be repaired.
             if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
@@ -119,11 +119,11 @@
         /// <typeparam name="T">Type of protocol result.</typeparam>
         /// <param name="employerID">Target employer's unique identifier.</param>
         /// <param name="day">Reporting day.</param>
-        /// <param name="protocol">Protocol of reporting.</param>
+        /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
         /// <returns>Checked stamps for daily reporting.</returns>
-        internal List<EmployerTimeStamp> CollectStapmsForDailyReport<T>(int employerID, DateTime day, ReportProtocol<T> protocol)
+        internal List<EmployerTimeStamp> CollectStapmsForDailyReport<T>(int employerID, DateTime day, List<Notification> notifications)
         {
-            if(protocol == null)
+            if(notifications == null)
             {
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull); 
             }
@@ -135,9 +135,9 @@
                 return employerStamps;
             }
 
-            this.VerifyFirstStamp<T>(employerStamps, employerID, day, protocol);
-            this.VerifyLastStamp<T>(employerStamps, employerID, day, protocol);
-            this.VerifyStampsSequence<T>(employerStamps, employerID, day, protocol);
+            this.VerifyFirstStamp<T>(employerStamps, employerID, day, notifications);
+            this.VerifyLastStamp<T>(employerStamps, employerID, day, notifications);
+            this.VerifyStampsSequence<T>(employerStamps, employerID, day, notifications);
 
             return employerStamps;
         }
@@ -150,15 +150,15 @@
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
-        /// <param name="protocol">Protocol of reporting.</param>
-        internal void VerifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
+        internal void VerifyFirstStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {
                 throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
-            if (protocol == null)
+            if (notifications == null)
             {
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
@@ -166,8 +166,8 @@
             // if first record is not in-stamp.
             if (employerStamps.Count == 0 || employerStamps[0].Type != StampType.In)
             {
-                protocol.Notifications.Add(new Notification(ReporterMessages.FirstInStampNotFound, NotificationType.Warning));
-                protocol.Notifications.Add(new Notification(ReporterMessages.BeginDayAsInStampAdded, NotificationType.Message));
+                notifications.Add(new Notification(ReporterMessages.FirstInStampNotFound, NotificationType.Warning));
+                notifications.Add(new Notification(ReporterMessages.BeginDayAsInStampAdded, NotificationType.Message));
 
                 EmployerTimeStamp firstInStamp = new EmployerTimeStamp();
                 firstInStamp.EmployerID = employerID;
@@ -188,15 +188,15 @@
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
-        /// <param name="protocol">Protocol of reporting.</param>
-        internal void VerifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
+        internal void VerifyLastStamp<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {
                 throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
-            if (protocol == null)
+            if (notifications == null)
             {
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
@@ -204,7 +204,7 @@
             // if last record is not out-stamp.
             if (employerStamps.Count == 0 || employerStamps[employerStamps.Count - 1].Type != StampType.Out)
             {
-                protocol.Notifications.Add(new Notification(ReporterMessages.LastOutStampNotFound, NotificationType.Warning));
+                notifications.Add(new Notification(ReporterMessages.LastOutStampNotFound, NotificationType.Warning));
 
                 // Date of next day.
                 DateTime nextDay = day.AddDays(1);
@@ -217,13 +217,13 @@
                 if (employerStampsForNextDay != null && employerStampsForNextDay.Count > 0
                     && employerStampsForNextDay[0].Type == StampType.Out && employerStampsForNextDay[0].Time <= nextDayFindingDate)
                 {
-                    protocol.Notifications.Add(new Notification(ReporterMessages.FirstOutNextDayAsLast, NotificationType.Message));
+                    notifications.Add(new Notification(ReporterMessages.FirstOutNextDayAsLast, NotificationType.Message));
 
                     employerStamps.Add(employerStampsForNextDay[0]);
                 }
                 else
                 {
-                    protocol.Notifications.Add(new Notification(ReporterMessages.EndDayAsLastOutStamp, NotificationType.Message));
+                    notifications.Add(new Notification(ReporterMessages.EndDayAsLastOutStamp, NotificationType.Message));
 
                     // Added stamp.
                     EmployerTimeStamp lastOutStamp = new EmployerTimeStamp();
@@ -246,15 +246,15 @@
         /// <param name="employerStamps">Collection that should be checked.</param>
         /// <param name="employerID">Unique identifier of target employer.</param>
         /// <param name="day">Date of day of reporting.</param>
-        /// <param name="protocol">Protocol of reporting.</param>
-        internal void VerifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, ReportProtocol<T> protocol)
+        /// <param name="notifications">Collection of notifications that will be filled during processing of collecting.</param>
+        internal void VerifyStampsSequence<T>(List<EmployerTimeStamp> employerStamps, int employerID, DateTime day, List<Notification> notifications)
         {
             if (employerStamps == null)
             {
                 throw new ArgumentNullException(ReporterMessages.StampsCollectionReferenceIsNull);
             }
 
-            if (protocol == null)
+            if (notifications == null)
             {
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
@@ -265,7 +265,7 @@
                 {
                     if (employerStamps[i].Time == employerStamps[i + 1].Time)
                     {
-                        protocol.Notifications.Add(new Notification(ReporterMessages.OneOfEqualStampsRemoved, NotificationType.Warning));
+                        notifications.Add(new Notification(ReporterMessages.OneOfEqualStampsRemoved, NotificationType.Warning));
                         employerStamps.RemoveAt(i + 1);
 
                         // Indexer should not be changed because 
@@ -273,7 +273,7 @@
                     }
                     else
                     {
-                        protocol.Notifications.Add(new Notification(ReporterMessages.NewStampInMiddleBetweenSameType, NotificationType.Warning));
+                        notifications.Add(new Notification(ReporterMessages.NewStampInMiddleBetweenSameType, NotificationType.Warning));
 
                         // Compute difference in milliseconds.
                         double diffInMilliseconds = (employerStamps[i + 1].Time - employerStamps[i].Time).TotalMilliseconds;

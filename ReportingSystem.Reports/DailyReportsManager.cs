@@ -43,7 +43,7 @@
             List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<TimeSpan>(employerID, day, protocol);
 
             // There is errors that can't be repaired.
-            if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
+            if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
             {
                 protocol.IsSucceed = false;
                 return protocol;
@@ -81,7 +81,7 @@
             List<EmployerTimeStamp> employerStamps = this.CollectStapmsForDailyReport<List<Respite>>(employerID, day, protocol);
 
             // There is errors that can't be repaired.
-            if (protocol.NotificationsByType(NotificationType.Error).Count != 0)
+            if (protocol.GetNotificationsOfType(NotificationType.Error).Count != 0)
             {
                 protocol.IsSucceed = false;
                 return protocol;

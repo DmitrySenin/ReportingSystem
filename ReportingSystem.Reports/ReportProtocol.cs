@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="type">Target type of notification.</param>
         /// <returns>Collection of notifications contains records only with specified type or empty collection.</returns>
-        public List<Notification> NotificationsByType(NotificationType type)
+        public List<Notification> GetNotificationsOfType(NotificationType type)
         {
             var notifications = (from notification in this.Notifications
                                  where notification.Type == type

@@ -259,7 +259,8 @@
                 throw new ArgumentNullException(ReporterMessages.ProtocolReferenceIsNull);
             }
 
-            for (int i = 0; i < employerStamps.Count - 1; )
+            int i = 0;
+            while(i < employerStamps.Count - 1)
             {
                 if (employerStamps[i].Type == employerStamps[i + 1].Type)
                 {

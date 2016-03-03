@@ -94,7 +94,7 @@ DailyDataCorrector.prototype._verifyFirstStamp = function(stamps, employerID, da
 		notifications.push(new Notification(messages.FirstInStampNotFound, NotificationType.Warning));
 		notifications.push(new Notification(messages.BeginDayAsInStampAdded, NotificationType.Message));
 
-		beggingOfTargetDay = new Date(day.getYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
+		beggingOfTargetDay = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
 
 		firstInStamp = new EmployerTimeStamp(employerID, StampType.In, beggingOfTargetDay);
 
@@ -192,7 +192,7 @@ DailyDataCorrector.prototype._verifyStampsSequence = function(stamps, employerID
 		if(!StampType.Compare(stamps[i].Type, stamps[i + 1].Type)) {
 
 			// Stamps' times are equal.
-			if(stamps[i].Time === stamps[i + 1].Time) {
+			if(stamps[i].Time.getTime() === stamps[i + 1].Time.getTime()) {
 				notifications.push(new Notification(messages.OneOfEqualStampsRemoved, NotificationType.Warning));
 
 				stamps.splice(i + 1, 1);
@@ -203,11 +203,11 @@ DailyDataCorrector.prototype._verifyStampsSequence = function(stamps, employerID
 			} else {
 				notifications.push(new Notification(messages.NewStampInMiddleBetweenSameType, NotificationType.Warning));
 
-				diffInMilliseconds = stamps[i + 1].Time - stamps[i].Time;
+				diffInSeconds = stamps[i + 1].Time - stamps[i].Time;
 
 				// Compute time in the middle of stamps.
-				middleDate = new Date(stamps[i].Time);
-				middleDate.setDate(middleDate.getDate() + diffInMilliseconds / 2);
+				// Expression inside parentheses computes seconds to create middle date. 
+				middleDate = new Date(Number(stamps[i].Time) + diffInSeconds / 2);
 
 				middleStampType = StampType.Compare(stamps[i].Type, StampType.In) ? StampType.Out : StampType.In;
 				middleStamp = new EmployerTimeStamp(employerID, middleStampType, middleDate);

@@ -74,7 +74,7 @@ DailyDataCorrector.prototype.CollectStampsForDailyReport = function(employerID, 
  * @param  {Date} day           Date of day of reporting.
  * @param  {Array} notifications Notifications that will be completed during processing.
  */
-DailyDataCorrector.prototype._verifyFirstStamp = function(stamps, employerID, day, notifications) {} {
+DailyDataCorrector.prototype._verifyFirstStamp = function(stamps, employerID, day, notifications) {
 
 	if(!Array.isArray(notifications)) {
 		throw new Error(messages.NotificationsIsNotArray);
@@ -132,7 +132,7 @@ DailyDataCorrector.prototype._verifyLastStamp = function(stamps, employerID, day
 		nextDay = new Date(day);
 		nextDay.setDate(nextDay.getDate() + 1);
 
-		stampsForNextDay = dataSource.GetByEmployerIDForDay(employerID, nextDay);
+		stampsForNextDay = this._dataSource.GetByEmployerIDForDay(employerID, nextDay);
 		nextDayFindingDate = this._nextDayEarliestFindingTime(day);
 
 		// there is stamps for next day

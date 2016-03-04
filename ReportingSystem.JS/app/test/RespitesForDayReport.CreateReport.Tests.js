@@ -50,4 +50,29 @@ describe("RespitesForDayReport.CreateReport", function() {
 
 	});
 
+	it("Should not find any respites since stamps collection is empty.", function() {
+
+		var targetEmployerID = 1;
+
+		// 03.04.2016
+		var targetDay = new Date(2016, 3, 3);
+
+		var maxRespiteDuration = TimeSpan.fromMinutes(15); 
+
+		stamps = [];
+
+		// Create fake source.
+		var source = new FakeStampsSource.FakeStampsSource(stamps);
+		var reporter = new RespitesForDayReport.RespitesForDay(source);
+
+		// No expected respites 
+		var expectedRespites = [];
+
+		var protocol = reporter.CreateReport(targetEmployerID, targetDay, maxRespiteDuration); 
+
+		protocol.IsSucceed.should.equal(true);
+		protocol.Result.should.deep.equal(expectedRespites);
+
+	});
+
 });

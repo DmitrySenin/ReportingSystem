@@ -40,7 +40,7 @@ TimeOfWorkForDayReport.prototype.CreateReport = function(employerID, day) {
 	}
 
 	if(!employerStamps.length) {
-		protocol.notifications.push(new Notification(messages.NoStampsForDay, NotificationType.Message));
+		protocol.Notifications.push(new Notification(messages.NoStampsForDay, NotificationType.Message));
 	}
 
 	timeOfWork = new TimeSpan.TimeSpan(0);

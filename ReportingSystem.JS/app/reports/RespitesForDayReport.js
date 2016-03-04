@@ -41,7 +41,7 @@ RespitesForDay.prototype.CreateReport = function(employerID, day, maxDuration) {
 	}
 
 	if(!employerStamps.length) {
-		protocol.notifications.push(new Notification(messages.NoStampsForDay, NotificationType.Message));
+		protocol.Notifications.push(new Notification(messages.NoStampsForDay, NotificationType.Message));
 	}
 
 	respites = [];

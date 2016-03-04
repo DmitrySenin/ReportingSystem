@@ -185,5 +185,27 @@ describe("DailyDataCorrector.VerifyLastStamp", function() {
 
 		(() => dailyDataCorrector._verifyLastStamp(stamps, targetEmployerID, targetDay, notifications)).should.throw(Error);
 	});
+
+	it("Should throw error since collection of notifications is not array.", function() {
+
+		var targetEmployerID = 1;
+
+		// 03.04.2016
+		var targetDay = new Date(2016, 3, 3);
+
+		// Instead array create string.
+		stamps = [];
+
+		// Create fake source.
+		var source = new FakeStampsSource.FakeStampsSource(stamps);
+
+		var dailyDataCorrector = new DailyDataCorrector(source);
+		var notifications = "Not array";
+
+		// Copy
+		var expectedStamps = stamps.slice();
+
+		(() => dailyDataCorrector._verifyLastStamp(stamps, targetEmployerID, targetDay, notifications)).should.throw(Error);
+	});
 	
 });

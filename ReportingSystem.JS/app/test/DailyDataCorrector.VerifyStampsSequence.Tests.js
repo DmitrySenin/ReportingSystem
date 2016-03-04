@@ -44,5 +44,37 @@ describe("DailyDataCorrector.VerifyStampsSequence", function() {
 		stamps.length.should.equal(expectedSize);
 		stamps.should.deep.equal(expectedStamps);
 	});
+
+	it("Should delete one of two equal stamps.", function() {
+
+		var targetEmployerID = 1;
+
+		// 03.04.2016
+		var targetDay = new Date(2016, 3, 3);
+
+		stamps = [
+			// Out-stamp at 9.30 am
+			new EmployerTimeStamp( targetEmployerID, StampType.Out, new Date(targetDay.setHours(9, 30)) ),
+
+			// Out-stamp at 9.30 am
+			new EmployerTimeStamp( targetEmployerID, StampType.Out, new Date(targetDay.setHours(9, 30)) ),
+		];
+
+		// Create fake source.
+		var source = new FakeStampsSource.FakeStampsSource(stamps);
+
+		var dailyDataCorrector = new DailyDataCorrector(source);
+		var notifications = [];
+
+		var expectedSize = stamps.length - 1;
+		var expectedStamps = [
+			stamps[0]
+		];
+
+		dailyDataCorrector._verifyStampsSequence(stamps, targetEmployerID, targetDay, notifications);
+
+		stamps.length.should.equal(expectedSize);
+		stamps.should.deep.equal(expectedStamps);
+	});
 	
 });

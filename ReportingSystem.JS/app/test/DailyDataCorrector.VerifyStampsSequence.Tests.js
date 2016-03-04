@@ -77,4 +77,22 @@ describe("DailyDataCorrector.VerifyStampsSequence", function() {
 		stamps.should.deep.equal(expectedStamps);
 	});
 	
+	it("Should not throw any error if there is no stamps for day.", function() {
+
+		var targetEmployerID = 1;
+
+		// 03.04.2016
+		var targetDay = new Date(2016, 3, 3);
+
+		stamps = [];
+
+		// Create fake source.
+		var source = new FakeStampsSource.FakeStampsSource(stamps);
+
+		var dailyDataCorrector = new DailyDataCorrector(source);
+		var notifications = [];
+
+		(() => dailyDataCorrector._verifyStampsSequence(stamps, targetEmployerID, targetDay, notifications)).should.not.throw(Error);
+	});
+	
 });

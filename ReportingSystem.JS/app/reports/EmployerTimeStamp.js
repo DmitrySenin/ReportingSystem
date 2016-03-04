@@ -27,7 +27,6 @@ EmployerTimeStamp.Compare = function (x, y) {
 		if(x.Time.getTime() !== y.Time.getTime()) {
 			return x.Time - y.Time;
 		} else {
-			debugger;
 			return StampType.Compare(x.Type, y.Type);
 		}
 	}

@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/SeninDmitry/ReportingSystem/issues"
   },
-  "homepage": "https://github.com/SeninDmitry/ReportingSystem#readme"
+  "homepage": "https://github.com/SeninDmitry/ReportingSystem#readme",
+  "dependencies": {
+    "timespan": "^2.3.0"
+  }
 }

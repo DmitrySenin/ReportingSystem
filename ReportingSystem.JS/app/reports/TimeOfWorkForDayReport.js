@@ -33,7 +33,7 @@ TimeOfWorkForDayReport.prototype.CreateReport = function(employerID, day) {
 
 	employerStamps = this._dataCorrector.CollectStampsForDailyReport(employerID, day, protocol.Notifications);
 
-	// Some crtical errors were found.
+	// Some critical errors were found.
 	if(protocol.GetNotificationsOfType(NotificationType.Error).length > 0) {
 		protocol.IsSucceed = false;
 		return protocol;
@@ -44,8 +44,6 @@ TimeOfWorkForDayReport.prototype.CreateReport = function(employerID, day) {
 	}
 
 	timeOfWork = new TimeSpan.TimeSpan(0);
-
-	debugger;
 
 	for(var i = 0; i < employerStamps.length - 1; i += 2) {
 		timeOfWork.addMilliseconds(employerStamps[i + 1].Time - employerStamps[i].Time);

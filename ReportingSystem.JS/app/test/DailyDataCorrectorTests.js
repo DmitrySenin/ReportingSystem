@@ -84,5 +84,43 @@ describe("DailyDataCorrector", function() {
 			stamps.length.should.equal(expectedSize);
 			stamps[stamps.length - 1].should.deep.equal(expectedStamp);
 		});
+
+		it("Should add first Out-stamp of next day since its satisfies criteria.", function() {
+			var targetEmployerID = 1;
+
+			// 03.04.2016
+			var targetDay = new Date(2016, 3, 3);
+
+			var nextDay = new Date(targetDay);
+			nextDay.setDate(nextDay.getDate() + 1);
+
+			// All stamps in source.
+			allStamps = [
+				// In-stamp at 9.00 am.
+				new EmployerTimeStamp( targetEmployerID, StampType.In, new Date(targetDay.setHours(9)) ),
+
+				// Out-stamp at 3.59 am of next day.
+				new EmployerTimeStamp( targetEmployerID, StampType.Out, new Date(nextDay.setHours(3, 59)) ),
+			];
+
+			// Stamps of target employer for target day.
+			targetDayStamps = [
+				allStamps[0]
+			];
+
+			// Create fake source.
+			var source = new FakeStampsSource.FakeStampsSource(allStamps);
+
+			var dailyDataCorrector = new DailyDataCorrector(source);
+			var notifications = [];
+
+			var expectedSize = targetDayStamps.length + 1;
+			var expectedStamp = allStamps[1];
+
+			dailyDataCorrector._verifyLastStamp(targetDayStamps, targetEmployerID, targetDay, notifications);
+
+			targetDayStamps.length.should.equal(expectedSize);
+			targetDayStamps[targetDayStamps.length - 1].should.deep.equal(expectedStamp);
+		});
 	});
 });

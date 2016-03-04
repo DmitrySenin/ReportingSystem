@@ -236,6 +236,8 @@ DailyDataCorrector.prototype._nextDayEarliestFindingTime = function (day) {
 	nextDay = new Date(day);
 	nextDay.setDate(nextDay.getDate() + 1);
 	nextDay.setHours(4, 0, 0, 0);
+
+	return nextDay;
 };
 
 module.exports = DailyDataCorrector;

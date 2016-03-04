@@ -9,7 +9,7 @@ var FakeStampsSource = require('./FakeStampsSource.js');
 
 describe("TimeOfWorkReport.CreateReport", function() {
 
-	it("Should correct compute time of work since data is correct", function() {
+	it("Should compute time of work correctly since data is correct", function() {
 
 		var targetEmployerID = 1;
 
@@ -43,7 +43,7 @@ describe("TimeOfWorkReport.CreateReport", function() {
 		protocol.Result.should.deep.equal(expectedTimeOfWork);
 	});
 
-	it("Should correct compute time of work since there is no stamps of employer for day.", function() {
+	it("Should compute time of work correctly since there is no stamps of employer for day.", function() {
 
 		// Arrange
 	
@@ -68,7 +68,7 @@ describe("TimeOfWorkReport.CreateReport", function() {
 		protocol.Result.should.deep.equal(expectedTimeOfWork);
 	});
 
-	it("Should correct compute time of work since there is no stamps of employer for day.", function() {
+	it("Should compute time of work correctly since data for day contains mistakes.", function() {
 
 		// Arrange
 	

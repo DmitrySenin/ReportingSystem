@@ -152,9 +152,10 @@ DailyDataCorrector.prototype._verifyLastStamp = function(stamps, employerID, day
 
 			notifications.push(new Notification(messages.EndDayAsLastOutStamp, NotificationType.Message));
 
-			nextDay.setHours(23, 59, 59, 999);
+			lastStamDate = new Date(day);
+			lastStamDate.setHours(23, 59, 59, 9999);
 
-			lastOutStamp = new EmployerTimeStamp(employerID, StampType.Out, nextDay);
+			lastOutStamp = new EmployerTimeStamp(employerID, StampType.Out, lastStamDate);
 
 			stamps.push(lastOutStamp);
 		}

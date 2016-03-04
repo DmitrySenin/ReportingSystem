@@ -5,7 +5,7 @@ var NotificationType = require('./NotificationType.js');
  */
 function ReportProtocol() {
 	this.Result = undefined;
-	this.IsSucced = undefined;
+	this.IsSucceed = undefined;
 	this.Notifications = [];
 }
 

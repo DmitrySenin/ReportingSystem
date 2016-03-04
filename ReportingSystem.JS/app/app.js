@@ -5,11 +5,11 @@ app.ReportingSystem = {
 	EmployerTimeStamp: require('./reports/EmployerTimeStamp.js'),
 	NotificationType: require('./reports/NotificationType.js'),
 	Notification: require('./reports/Notification.js'),
-	ReportProtocol: require('./reports/ReportProtocol.js')
+	ReportProtocol: require('./reports/ReportProtocol.js'),
+	TimeOfWorkForDayReport: require('./reports/TimeOfWorkForDayReport.js')
 };
 
-DailyDataCorrector = require('./reports/DailyDataCorrector.js');
-
+var targetDay = new Date(2016, 3, 3);
 var source = {
 	GetByEmployerIDForDay() {
 		return [
@@ -20,14 +20,12 @@ var source = {
 	}
 };
 
-ddc = new DailyDataCorrector(source);
+var workTimeReporter = new app.ReportingSystem.TimeOfWorkForDayReport(source);
 
-notes = [];
+protocol = workTimeReporter.CreateReport(1, targetDay);
 
-data = ddc.CollectStampsForDailyReport(1, new Date(2016, 3, 3), notes);
-
-console.log(data);
-console.log(notes);
+console.log(protocol);
+console.log(protocol.Result.totalHours());
 
 module.exports = {
 	app: app

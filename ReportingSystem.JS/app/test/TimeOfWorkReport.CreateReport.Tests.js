@@ -40,7 +40,32 @@ describe("TimeOfWorkReport.CreateReport", function() {
 		var protocol = reporter.CreateReport(targetEmployerID, targetDay); 
 
 		protocol.IsSucceed.should.equal(true);
-		protocol.Result.should.deep.equal(excpectedTimeOfWork);
+		protocol.Result.should.deep.equal(expectedTimeOfWork);
+	});
+
+	it("Should correct compute time of work since there is no stamps of employer for day.", function() {
+
+		// Arrange
+	
+		var targetEmployerID = 1;
+
+		// 03.04.2016
+		var targetDay = new Date(2016, 3, 3);
+
+		stamps = [];
+
+		// Create fake source.
+		var source = new FakeStampsSource.FakeStampsSource(stamps);
+		var reporter = new TimeOfWorkReport(source);
+
+		var expectedTimeOfWork = new TimeSpan.TimeSpan(0);
+
+		// Act
+		var protocol = reporter.CreateReport(targetEmployerID, targetDay); 
+
+		// Assert
+		protocol.IsSucceed.should.equal(true);
+		protocol.Result.should.deep.equal(expectedTimeOfWork);
 	});
 
 });

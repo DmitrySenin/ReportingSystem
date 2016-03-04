@@ -153,7 +153,7 @@ DailyDataCorrector.prototype._verifyLastStamp = function(stamps, employerID, day
 			notifications.push(new Notification(messages.EndDayAsLastOutStamp, NotificationType.Message));
 
 			lastStamDate = new Date(day);
-			lastStamDate.setHours(23, 59, 59, 9999);
+			lastStamDate.setHours(23, 59, 59, 999);
 
 			lastOutStamp = new EmployerTimeStamp(employerID, StampType.Out, lastStamDate);
 
@@ -236,6 +236,8 @@ DailyDataCorrector.prototype._nextDayEarliestFindingTime = function (day) {
 	nextDay = new Date(day);
 	nextDay.setDate(nextDay.getDate() + 1);
 	nextDay.setHours(4, 0, 0, 0);
+
+	return nextDay;
 };
 
 module.exports = DailyDataCorrector;
